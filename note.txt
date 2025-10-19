@@ -1,0 +1,36 @@
+Agent
+ - name
+ - bangla_name
+ - license_issue_date
+ - license_no
+ - ain_no
+ - membership_no
+ - owners_name
+ - owner_type []
+ - gender
+ - license_status
+ - office_address
+ - parmanent_address
+ - email
+ - phone
+ - photo
+ - destination
+ - house
+ - note
+
+
+
+
+
+
+
+__ADMINTO_CONFIG__
+
+
+
+Fees --------------
+role --------------
+sms
+Report
+certificate
+email

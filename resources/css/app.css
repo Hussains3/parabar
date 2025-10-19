@@ -1,0 +1,90 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+/* @import url('https://fonts.googleapis.com/css2?family=Tsukimi+Rounded&display=swap'); */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.form-input,.form-textarea,.form-select,.form-multiselect{
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    background-color: #fff;
+    border-color: #6b7280;
+    border-width: 1px;
+    border-radius: 3px;
+    padding-top: 0.2rem;
+    padding-right: 0.75rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    --tw-shadow: 0 0 #0000;
+}
+
+
+input[type="file"]{
+    padding: 0 !important;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #4f46e5;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+
+table.dataTable tbody th, table.dataTable tbody td {
+	padding: 4px 4px !important;
+}
+
+
+
+/* For dark mode */
+:is([data-mode="dark"] .cardone) {
+	--tw-bg-opacity: 1;
+	background-color: rgb(51 65 85/ var(--tw-bg-opacity)) /* #1e293b */;
+}
+
+/* Gallery styles */
+.gallery-item {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.gallery-item img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.gallery-item:hover .gallery-item-content {
+    animation: fadeInUp 0.3s ease-out forwards;
+}
+
+/* Masonry layout adjustments */
+@media (min-width: 768px) {
+    .gallery-item:nth-child(3n+1) {
+        grid-row: span 2;
+    }
+    .gallery-item:nth-child(4n+1) {
+        grid-column: span 2;
+    }
+}
