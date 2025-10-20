@@ -30,7 +30,7 @@ class IeDataController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.ie_datas.create');
     }
 
     /**
@@ -39,30 +39,30 @@ class IeDataController extends Controller
     public function store(StoreIe_dataRequest $request)
     {
         $ie_data = new Ie_data();
-        $ie_data->bin_no = $request->bin_no;
-        $ie_data->ie = $request->ie;
-        $ie_data->name = $request->name;
-        $ie_data->owners_name = $request->owners_name;
-
-        if ($request->hasFile('photo')) {
-            $image = $request->photo;
+        $ie_data->org_name = $request->org_name;
+        if ($request->hasFile('org_logo')) {
+            $image = $request->org_logo;
             $ext = $image->getClientOriginalExtension();
             $filename = uniqid() . '.' . $ext;
-            $request->photo->move(public_path('images'), $filename);
-            $ie_data->photo = 'images/'.$filename;
+            $request->org_logo->move(public_path('images'), $filename);
+            $ie_data->org_logo = 'images/'.$filename;
         }
-
-        $ie_data->destination = $request->destination;
-        $ie_data->office_address = $request->office_address;
-        $ie_data->phone = $request->phone;
-        $ie_data->email = $request->email;
-        $ie_data->house = $request->house;
-        if ($request->note) {
-            $ie_data->note = $request->note;
-        }
+        $ie_data->bin_no = $request->bin_no;
+        $ie_data->tin_no = $request->tin_no;
+        $ie_data->name = $request->name;
+        $ie_data->fax_telephone = $request->fax_telephone;
+        $ie_data->phone_primary = $request->phone_primary;
+        $ie_data->phone_secondary = $request->phone_secondary;
+        $ie_data->whatsapp = $request->whatsapp;
+        $ie_data->email_primary = $request->email_primary;
+        $ie_data->email_secondary = $request->email_secondary;
+        $ie_data->house_distric = $request->house_distric;
+        $ie_data->address = $request->address;
+        $ie_data->post = $request->post;
         $ie_data->save();
 
-        return response()->json(['success' => 'Added successfully.']);
+        return redirect()->route('ie_datas.index')->with(['status' => 200, 'message' => 'Importer / Exporter Created']);
+
     }
 
     /**
@@ -88,30 +88,32 @@ class IeDataController extends Controller
      */
     public function update(UpdateIe_dataRequest $request, $id)
     {
-        $ie_data = Ie_data::find($id);
+        $ie_data = Ie_data::findOrFail($id);
 
-        $ie_data->bin_no = $request->bin_no;
-        $ie_data->ie = $request->ie;
-        $ie_data->name = $request->name;
-        $ie_data->owners_name = $request->owners_name;
+        $ie_data = new Ie_data();
 
-        if ($request->hasFile('photo')) {
-            $image = $request->photo;
+
+        $ie_data->org_name = $request->org_name;
+        if ($request->hasFile('org_logo')) {
+            $image = $request->org_logo;
             $ext = $image->getClientOriginalExtension();
             $filename = uniqid() . '.' . $ext;
-             Storage::delete("images/{$ie_data->image}");
-            $request->photo->move(public_path('images'), $filename);
-            $ie_data->photo = 'images/'.$filename;
+            Storage::delete("images/{$ie_data->image}");
+            $request->org_logo->move(public_path('images'), $filename);
+            $ie_data->org_logo = 'images/'.$filename;
         }
-
-        $ie_data->destination = $request->destination;
-        $ie_data->office_address = $request->office_address;
-        $ie_data->phone = $request->phone;
-        $ie_data->email = $request->email;
-        $ie_data->house = $request->house;
-        if ($request->note) {
-            $ie_data->note = $request->note;
-        }
+        $ie_data->bin_no = $request->bin_no;
+        $ie_data->tin_no = $request->tin_no;
+        $ie_data->name = $request->name;
+        $ie_data->fax_telephone = $request->fax_telephone;
+        $ie_data->phone_primary = $request->phone_primary;
+        $ie_data->phone_secondary = $request->phone_secondary;
+        $ie_data->whatsapp = $request->whatsapp;
+        $ie_data->email_primary = $request->email_primary;
+        $ie_data->email_secondary = $request->email_secondary;
+        $ie_data->house_distric = $request->house_distric;
+        $ie_data->address = $request->address;
+        $ie_data->post = $request->post;
         $ie_data->save();
 
 

@@ -27,31 +27,12 @@ class FileDataController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $year = Carbon::now()->year; // Get the current year
-        $file_data = File_data::latest()->with('agent')->first(); // Retrieve the latest File_data with agent relationship
-
-        // Determine the next lodgement number
-        $currentYear = Carbon::now()->year;
-        $file_data_year = $file_data ? $file_data->created_at->year : null;
-
-        if ($file_data && $file_data_year == $currentYear) {
-            $next_lodgement_no = ($file_data->lodgement_no == '94020')
-            ? 1
-            : ($file_data->lodgement_no ?? 0) + 1;
-        } else {
-            $next_lodgement_no = 1; // Reset to 1 at the start of a new year
-        }
-
-        // Get the last agent name and ID if available
-        $lastagent = $file_data->agent->name ?? null;
-        $lastagent_id = $file_data->agent->id ?? null;
-
-        $agents = Agent::select('id', 'name', 'ain_no')->orderBy('name')->get(); // Retrieve only id, name, and ain_number of all agents, ordered by name
-        // Return the view for creating a new File_data record
-        return view('admin.file_datas.create', compact('next_lodgement_no', 'file_data', 'lastagent', 'lastagent_id', 'agents', 'year'));
+        $ie_datas = Ie_data::select('id', 'org_name')->orderBy('org_name')->get();
+        return view('admin.file_datas.create', compact('ie_datas'));
     }
+
     /**
      * Show the form for creating a new resource.
      */

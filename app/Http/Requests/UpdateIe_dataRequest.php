@@ -22,17 +22,20 @@ class UpdateIe_dataRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'org_name' => 'nullable',
+            'org_logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2024',
             'bin_no' => 'nullable',
-            'name' => 'required',
-            'ie' => 'required',
-            'owners_name' => 'nullable',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2024',
-            'destination' => 'nullable',
-            'office_address' => 'nullable',
-            'phone' => 'nullable',
-            'email' => 'nullable',
-            'house' => 'nullable',
-            'note' => 'nullable'
+            'tin_no' => 'nullable',
+            'name' => 'nullable',
+            'fax_telephone' => 'nullable',
+            'phone_primary' => 'nullable',
+            'phone_secondary' => 'nullable',
+            'whatsapp' => 'nullable',
+            'email_primary' => 'nullable',
+            'email_secondary' => 'nullable',
+            'house_distric' => 'nullable',
+            'address' => 'nullable',
+            'post' => 'nullable',
         ];
     }
 }

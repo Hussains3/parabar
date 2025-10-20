@@ -42,15 +42,29 @@
 
 
             {{-- Dashboard --}}
-            @role('admin|extra|operator')
             {{-- Importer/Exporter --}}
             <li class="menu-item">
-                <a href="{{route('ie_datas.index')}}" class="menu-link">
+                <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">
                     <span class="menu-icon"><i class="mdi mdi-account-switch-outline"></i></span>
                     <span class="menu-text"> Importer/Exporter </span>
+                    <span class="menu-arrow"></span>
                 </a>
+
+                <ul class="sub-menu hidden">
+                    <li class="menu-item">
+                        <a href="{{route('ie_datas.index')}}" class="menu-link">
+                            <span class="menu-text">All</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{route('ie_datas.create')}}" class="menu-link">
+                            <span class="menu-text">Carete</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
-            @endrole
+
+
 
             @role('admin|extra|operator')
             {{-- File Datas --}}

@@ -10,98 +10,7 @@
     </x-slot>
 
     {{-- Page Content --}}
-    <div class="flex flex-col lg:flex-row gap-6">
-
-        {{-- Form --}}
-        <div class="card max-w-2xl">
-            <div class="p-6">
-                <h2 class="mb-4 text-xl">New Importer / Exporter</h2>
-
-                <form class="" id="ieCreateForm" enctype="multipart/form-data">
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="bin_no" class="block mb-2">BIN No</label>
-                            <input type="text" class="form-input" id="bin_no" name="bin_no">
-                        </div> <!-- end -->
-
-                        <div class="col-span-2">
-                            <label for="name" class="block mb-2">Importer / Exporter Name</label>
-                            <input type="text" class="form-input" id="name" name="name" required autofocus>
-                        </div> <!-- end -->
-
-
-                        <div class="">
-                            <label class="block mb-2 after:content-['*'] after:text-red-500">Importer / Exporter</label>
-                            <div class="flex gap-6">
-                                <div class="flex items-center gap-4">
-                                    <input type="radio" id="contactChoice1" name="ie" value="Importer" checked>
-                                    <label for="contactChoice1">Importer</label>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <input type="radio" id="contactChoice2" name="ie" value="Exporter">
-                                    <label for="contactChoice2">Exporter</label>
-                                </div>
-                            </div>
-                        </div> <!-- end -->
-
-
-
-
-
-
-                        <div class="">
-                            <label for="owners_name" class="block mb-2">Owner / Manager Name</label>
-                            <input type="text" class="form-input" id="owners_name" name="owners_name">
-                        </div> <!-- end -->
-
-
-                        <div>
-                            <label class="block text-gray-600 mb-2" for="photo">Photo</label>
-                            <input type="file" id="photo" class="form-input border" name="photo">
-                        </div> <!-- end -->
-
-
-                        <div class="">
-                            <label for="destination" class="block mb-2">Designation</label>
-                            <input type="text" class="form-input" id="destination" name="destination">
-                        </div> <!-- end -->
-
-                        <div class="">
-                            <label for="office_address" class="block mb-2">Agent / Office Address</label>
-                            <input type="text" class="form-input" id="office_address" name="office_address">
-                        </div> <!-- end -->
-
-                        <div class="">
-                            <label for="phone" class="block mb-2">Phone Number</label>
-                            <input type="text" class="form-input" id="phone" name="phone">
-                        </div> <!-- end -->
-
-                        <div class="">
-                            <label for="email" class="block mb-2">Email</label>
-                            <input type="email" class="form-input" id="email" name="email">
-                        </div> <!-- end -->
-
-                        <div class="">
-                            <label for="house" class="block mb-2">House</label>
-                            <input type="text" class="form-input" id="house" name="house" value="Benapole">
-                        </div> <!-- end -->
-
-                        <div class="col-span-2">
-                            <label for="note" class="block mb-2">Note</label>
-                            <textarea  class="form-input" name="note" id="note" cols="30" rows="5" placeholder="Note"></textarea>
-                        </div> <!-- end -->
-
-                        <div class=" ">
-                            <button type="submit"
-                                class="block text-center px-4 py-2 bg-gradient-to-r from-violet-400 to-purple-300 rounded-md shadow-md hover:shadow-lg hover:scale-105 duration-150 transition-all font-bold text-lg text-white"
-                                id="baccountSaveBtn">Save</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
+    <div class="">
 
         {{-- Table --}}
         <div class="card rounded-tl-none">
@@ -113,11 +22,11 @@
                         <tr>
                             <th>Sl</th>
                             <th>BIN No</th>
+                            <th>TIN No</th>
                             <th>IM/EX Name</th>
-                            <th>Owner Name</th>
                             <th>Phone</th>
-                            <th>Type</th>
-                            <th>House / Station</th>
+                            <th>Email</th>
+                            <th>Address</th>
                             <th class="text-right">Action</th>
                         </tr>
                     </thead>
@@ -152,24 +61,24 @@
                         name: 'bin_no'
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'tin_no',
+                        name: 'tin_no'
                     },
                     {
-                        data: 'owners_name',
-                        name: 'owners_name',
+                        data: 'org_name',
+                        name: 'org_name'
                     },
                     {
-                        data: 'phone',
-                        name: 'phone',
+                        data: 'phone_primary',
+                        name: 'phone_primary',
                     },
                     {
-                        data: 'ie',
-                        name: 'ie',
+                        data: 'email_primary',
+                        name: 'email_primary',
                     },
                     {
-                        data: 'house',
-                        name: 'house'
+                        data: 'address',
+                        name: 'address'
                     },
                     {
                         data: null,
@@ -178,6 +87,9 @@
 
                                 <a href="${BASE_URL}ie_datas/${data.id}/edit" class="text-seagreen/70 hover:text-seagreen  hover:scale-105 transition duration-150 ease-in-out text-xl" >
                                     <span class="menu-icon"><i class="mdi mdi-table-edit"></i></span>
+                                </a>
+                                <a href="${BASE_URL}file_datas/create?id=${data.id}" class="text-orange-500/70 hover:text-seagreen  hover:scale-105 transition duration-150 ease-in-out text-xl" >
+                                    <span class="menu-icon"><i class="mdi mdi-cash-100"></i></span>
                                 </a>
                                 <button type="button"  class="text-red-500/70 hover:text-red  hover:scale-105 transition duration-150 ease-in-out text-xl" onclick="ie_dataDelete(${data.id});">
                                     <span class="menu-icon"><i class="mdi mdi-delete"></i></span>
@@ -223,6 +135,7 @@
                     }
                 });
             }
+
 
 
             // Add New Importer / Exporter

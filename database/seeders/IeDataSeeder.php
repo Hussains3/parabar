@@ -16,20 +16,35 @@ class IeDataSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
+        $districts = [
+            'Bagerhat', 'Bandarban', 'Barguna', 'Barisal', 'Bhola', 'Bogra', 'Brahmanbaria',
+            'Chandpur', 'Chittagong', 'Chuadanga', 'Comilla', "Cox'sBazar", 'Dhaka', 'Dinajpur',
+            'Faridpur', 'Feni', 'Gaibandha', 'Gazipur', 'Gopalganj', 'Habiganj', 'Jamalpur',
+            'Jessore', 'Jhenaidah', 'Khulna', 'Kishoreganj', 'Kurigram', 'Kushtia', 'Lakshmipur',
+            'Madaripur', 'Magura', 'Manikganj', 'Maulvibazar', 'Meherpur', 'Munshiganj',
+            'Mymensingh', 'Naogaon', 'Narail', 'Narayanganj', 'Narsingdi', 'Natore', 'Nawabganj',
+            'Netrokona', 'Nilphamari', 'Noakhali', 'Pabna', 'Panchagarh', 'Patuakhali', 'Pirojpur',
+            'Rajbari', 'Rajshahi'
+        ];
+
         foreach (range(1, 50) as $index) {
             Ie_data::create([
-                'bin_no' => Str::random(10), // Random BIN number
-                'ie' => $faker->randomElement(['Import', 'Export']), // Randomly "Import" or "Export"
-                'name' => $faker->company, // Fake company name
-                'owners_name' => $faker->name, // Fake owner's name
-                'photo' => $faker->imageUrl(100, 100, 'business', true, 'owner'), // Fake image URL
-                'destination' => $faker->city, // Fake city name
-                'office_address' => $faker->address, // Fake address
-                'phone' => $faker->phoneNumber, // Fake phone number
-                'email' => $faker->unique()->safeEmail, // Fake unique email
-                'house' => $faker->buildingNumber, // Fake building number
-                'created_at' => now(), // Current timestamp
-                'updated_at' => now(), // Current timestamp
+                'org_name' => $faker->company,
+                'org_logo' => null, // No fake images in seeder
+                'bin_no' => 'BIN' . $faker->unique()->numberBetween(100000, 999999),
+                'tin_no' => 'TIN' . $faker->unique()->numberBetween(100000, 999999),
+                'name' => $faker->company . ' ' . $faker->randomElement(['Imports', 'Exports', 'Trading']),
+                'fax_telephone' => $faker->phoneNumber,
+                'phone_primary' => '+880' . $faker->numberBetween(1300000000, 1999999999),
+                'phone_secondary' => '+880' . $faker->numberBetween(1300000000, 1999999999),
+                'whatsapp' => '+880' . $faker->numberBetween(1300000000, 1999999999),
+                'email_primary' => $faker->unique()->safeEmail,
+                'email_secondary' => $faker->unique()->safeEmail,
+                'house_distric' => $faker->randomElement($districts),
+                'address' => $faker->streetAddress . ', ' . $faker->city,
+                'post' => $faker->postcode,
+                'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
+                'updated_at' => now(),
             ]);
         }
 
