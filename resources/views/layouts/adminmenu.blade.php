@@ -61,6 +61,11 @@
                             <span class="menu-text">Carete</span>
                         </a>
                     </li>
+                    <li class="menu-item">
+                        <a href="{{route('dueimex')}}" class="menu-link">
+                            <span class="menu-text">Unpaid</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 
@@ -90,32 +95,30 @@
 
             {{-- Account --}}
             {{-- Finance --}}
-            {{-- <li class="menu-item">
+            <li class="menu-item">
                 <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">
                     <span class="menu-icon"><i class="mdi mdi-bank-outline"></i></span>
-                    <span class="menu-text"> Finance </span>
+                    <span class="menu-text"> Office Cost </span>
                     <span class="menu-arrow"></span>
                 </a>
-
                 <ul class="sub-menu hidden">
                     <li class="menu-item">
-                        <a href="{{route('banks.index')}}" class="menu-link">
-                            <span class="menu-text">Banks</span>
+                        <a href="{{route('cost-categories.index')}}" class="menu-link">
+                            <span class="menu-text">Cost Categories</span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{route('baccounts.index')}}" class="menu-link">
-                            <span class="menu-text">Bank Accounts</span>
+                        <a href="{{route('office-costs.index')}}" class="menu-link">
+                            <span class="menu-text">Office Costs</span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{route('transactions.index')}}" class="menu-link">
-                            <span class="menu-text">Transactions</span>
+                        <a href="{{route('office-costs.report')}}" class="menu-link">
+                            <span class="menu-text">Costs Report</span>
                         </a>
                     </li>
-
                 </ul>
-            </li> --}}
+            </li>
             @role('admin')
 
 
@@ -139,21 +142,6 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{route('createagentuser')}}" class="menu-link">
-                            <span class="menu-text">New Agent User</span>
-                        </a>
-                    </li>
-                    {{-- <li class="menu-item">
-                        <a href="#" class="menu-link">
-                            <span class="menu-text">Add Salary</span>
-                        </a>
-                    </li> --}}
-                    {{-- <li class="menu-item">
-                        <a href="{{route('users.index')}}" class="menu-link">
-                            <span class="menu-text">Trash</span>
-                        </a>
-                    </li> --}}
-                    <li class="menu-item">
                         <a href="{{route('roles.index')}}" class="menu-link">
                             <span class="menu-text">All Role</span>
                         </a>
@@ -172,7 +160,7 @@
             </li>
 
             {{-- Repots --}}
-            <li class="menu-item">
+            {{-- <li class="menu-item">
                 <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">
                     <span class="menu-icon"><i class="mdi mdi-cards-outline"></i></span>
                     <span class="menu-text">Reports</span>
@@ -212,7 +200,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
 
             @endrole

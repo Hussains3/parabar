@@ -15,54 +15,55 @@
 
         <div class="grid grid-cols-3 gap-4">
 
+            <a href="{{route('ie_datas.index')}}">
             <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
                 <div class="px-4 py-2">
                     <div class="flex items-center justify-between">
                         <div class="text-start">
-                            <a href="{{route('ie_datas.index')}}">
 
                                 <h4 class="card-title">Importer/Exporter Information</h4>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
 
+            <a href="{{route('file_datas.create')}}">
             <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
                 <div class="px-4 py-2">
                     <div class="flex items-center justify-between">
                         <div class="text-start">
-                            <a href="{{route('file_datas.create')}}">
 
                                 <h4 class="card-title">Input Bill Voucher Importer/Exporter</h4>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
 
+            <a href="{{route('file_datas.index')}}">
             <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
                 <div class="px-4 py-2">
                     <div class="flex items-center justify-between">
                         <div class="text-start">
-                            <a href="{{route('file_datas.index')}}">
 
                                 <h4 class="card-title">Bill Print</h4>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
-                <div class="px-4 py-2">
-                    <div class="flex items-center justify-between">
-                        <div class="text-start">
-                            <h4 class="card-title">Importer/Exporter Due Bill</h4>
+            </a>
+            <a href="{{route('dueimex')}}">
+                <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
+                    <div class="px-4 py-2">
+                        <div class="flex items-center justify-between">
+                            <div class="text-start">
+                                <h4 class="card-title">Importer/Exporter Due Bill</h4>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
 
             <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
                 <div class="px-4 py-2">

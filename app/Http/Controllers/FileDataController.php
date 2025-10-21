@@ -59,9 +59,61 @@ class FileDataController extends Controller
      */
     public function store(StoreFile_dataRequest $request)
     {
-        // Store the File_data record
-        $file_data = File_data::create($request->validated());
-        return redirect()->route('file_datas.index')->with(['status' => 200, 'message' => 'Invoice Created!']);
+        try {
+
+            // Create new File_data record
+            $file_data = new File_data();
+            $file_data->ie_data_id = $request->ie_data_id;
+            $file_data->be_number = $request->be_number;
+            $file_data->manifest_number = $request->manifest_number;
+            $file_data->package = $request->package;
+            $file_data->file_date = $request->file_date;
+            $file_data->lc_no = $request->lc_no;
+            $file_data->lc_value = $request->lc_value;
+            $file_data->lc_bank = $request->lc_bank;
+            $file_data->bill_no = $request->bill_no;
+
+            //Actual values
+            $file_data->actual_coat_fee = $request->actual_coat_fee;
+            $file_data->actual_asso_be_entry_fee = $request->actual_asso_be_entry_fee;
+            $file_data->actual_cargo_branch_aro = $request->actual_cargo_branch_aro;
+            $file_data->actual_cargo_branch_ro = $request->actual_cargo_branch_ro;
+            $file_data->actual_cargo_branch_ac = $request->actual_cargo_branch_ac;
+            $file_data->actual_manifest_dept = $request->actual_manifest_dept;
+            $file_data->actual_fourtytwo_shed_aro = $request->actual_fourtytwo_shed_aro;
+            $file_data->actual_examination_normal = $request->actual_examination_normal;
+            $file_data->actual_examination_irm = $request->actual_examination_irm;
+            $file_data->actual_examination_goinda = $request->actual_examination_goinda;
+            $file_data->actual_assessement_aro = $request->actual_assessement_aro;
+            $file_data->actual_assessement_ro = $request->actual_assessement_ro;
+            $file_data->actual_assessement_ac = $request->actual_assessement_ac;
+            $file_data->actual_assessement_dc = $request->actual_assessement_dc;
+            $file_data->actual_assessement_jc = $request->actual_assessement_jc;
+            $file_data->actual_assessement_adc = $request->actual_assessement_adc;
+            $file_data->actual_assessement_commissionar = $request->actual_assessement_commissionar;
+            $file_data->actual_lab_test_fee_receptable = $request->actual_lab_test_fee_receptable;
+            $file_data->actual_lab_test_fee_sample_processing = $request->actual_lab_test_fee_sample_processing;
+            $file_data->actual_group_sipay = $request->actual_group_sipay;
+            $file_data->actual_bank_chalan = $request->actual_bank_chalan;
+            $file_data->actual_bank_chalan_evening = $request->actual_bank_chalan_evening;
+            $file_data->actual_delivery_cost = $request->actual_delivery_cost;
+            $file_data->actual_unstamping_dep_ro = $request->actual_unstamping_dep_ro;
+            $file_data->actual_unstamping_dep_aro = $request->actual_unstamping_dep_aro;
+            $file_data->actual_load_unload = $request->actual_load_unload;
+            $file_data->actual_shed = $request->actual_shed;
+            $file_data->actual_exit = $request->actual_exit;
+            $file_data->actual_finaly_out_get = $request->actual_finaly_out_get;
+            $file_data->actual_file_commission = $request->actual_file_commission;
+            $file_data->actual_other_cost = $request->actual_other_cost;
+            $file_data->actual_total = $request->actual_total;
+            $file_data->status = 'Unpaid';
+
+            $file_data->save();
+
+            return redirect()->route('file_datas.index')->with(['status' => 200, 'message' => 'Invoice Created!']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['status' => 500, 'message' => 'Error creating invoice: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -197,19 +249,7 @@ class FileDataController extends Controller
      */
     public function destroy(File_data $file_data)
     {
-        // Check if user has permission to delete files
-        if (!Auth::user()->can('delete', $file_data)) {
-            return redirect()->back()->with(['status' => 403, 'message' => 'Unauthorized to delete this file.']);
-        }
-
         try {
-            // Log the deletion
-            LogHelper::log(
-                action: "File Data Deleted",
-                description: "File Data with BE number: {$file_data->be_number} was deleted",
-                log_type: 'delete'
-            );
-
             // Delete the record
             $file_data->delete();
 

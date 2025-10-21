@@ -26,6 +26,33 @@ class IeDataController extends Controller
     }
 
     /**
+     * Get all importers/exporters with unpaid actual_total
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
+    public function getUnpaidFiles(Request $request)
+    {
+        $ie_datas = Ie_data::whereHas('file_datas', function($query) {
+            $query->where('actual_total', '>', 0);
+        })
+        ->with(['file_datas' => function($query) {
+            $query->where('actual_total', '>', 0);
+        }])
+        ->get();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $ie_datas
+            ]);
+        }
+
+        return view('admin.ie_datas.unpaid', compact('ie_datas'));
+    }
+
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -70,7 +97,14 @@ class IeDataController extends Controller
      */
     public function show(Ie_data $ie_data)
     {
-        //
+        $ie_data->load(['file_datas' => function($query) {
+            $query->orderByRaw("CASE
+                WHEN status = 'Unpaid' AND actual_total > 0 THEN 1
+                ELSE 2
+            END")
+            ->orderBy('created_at', 'desc');
+        }]);
+        return view('admin.ie_datas.show', compact('ie_data'));
     }
 
     /**

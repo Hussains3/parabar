@@ -26,4 +26,11 @@ class Ie_data extends Model
         'address',
         'post',
     ];
+
+
+    //Define relationship with File_data model
+    public function file_datas()
+    {
+        return $this->hasMany(File_data::class, 'ie_data_id');
+    }
 }
