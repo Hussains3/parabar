@@ -2,14 +2,14 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <title>@if (isset($title)) {{ $title }} @endif | Chada - Benapole C&F Asso.</title>
+        <title>@if (isset($title)) {{ $title }} @endif | Parabar Shipping</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta content="Chada - A File management web application for benapole port c &f association." name="description">
         <meta content="shadapixel" name="author">
 
         <!-- App favicon -->
-        <link rel="shortcut icon" href="{{asset('favicon.ico')}}">
+        <link rel="shortcut icon" href="{{asset('parabarfac.png')}}">
 
         <!-- App css -->
         <link href="{{asset('css/app.min.css')}}" rel="stylesheet" type="text/css">

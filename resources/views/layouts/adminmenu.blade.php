@@ -66,7 +66,6 @@
 
 
 
-            @role('admin|extra|operator')
             {{-- File Datas --}}
             <li class="menu-item">
                 <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">
@@ -76,42 +75,18 @@
                 </a>
 
                 <ul class="sub-menu hidden">
-                    @role('extra')
                     <li class="menu-item">
-                        <a href="{{route('file_datas.create')}}" class="menu-link">
-                            <span class="menu-text">Receive Out</span>
+                        <a href="{{route('file_datas.dueindex')}}" class="menu-link">
+                            <span class="menu-text">Due Files</span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{route('file_datas.createin')}}" class="menu-link">
-                            <span class="menu-text">Receive In</span>
+                        <a href="{{route('file_datas.paidindex')}}" class="menu-link">
+                            <span class="menu-text">Paid Files</span>
                         </a>
                     </li>
-                    @endrole
-                    @role('operator')
-                    <li class="menu-item">
-                        <a href="{{route('baccounts.index')}}" class="menu-link">
-                            <span class="menu-text">Operated File</span>
-                        </a>
-                    </li>
-                    @endrole
-                    {{-- <li class="menu-item">
-                        <a href="{{route('transactions.index')}}" class="menu-link">
-                            <span class="menu-text">Transactions</span>
-                        </a>
-                    </li> --}}
-                    @role('admin|accountant|checker')
-                    <li class="menu-item">
-                        <a href="{{route('customfiles.index')}}" class="menu-link">
-                            <span class="menu-text">Customs Files</span>
-                        </a>
-                    </li>
-                    @endrole
                 </ul>
             </li>
-            @endrole
-
-            @role('admin|accountant')
 
             {{-- Account --}}
             {{-- Finance --}}
@@ -141,26 +116,7 @@
 
                 </ul>
             </li> --}}
-
-            @endrole
             @role('admin')
-
-            {{-- Activity Log --}}
-            <li class="menu-item">
-                <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">
-                    <span class="menu-icon"><i class="mdi mdi-playlist-play"></i></span>
-                    <span class="menu-text"> Activity Log </span>
-                    <span class="menu-arrow"></span>
-                </a>
-
-                <ul class="sub-menu hidden">
-                    <li class="menu-item">
-                        <a href="{{route('activity-logs.index')}}" class="menu-link">
-                            <span class="menu-text">All</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
 
 
             {{-- User --}}

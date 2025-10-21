@@ -25,6 +25,25 @@ class FileDataController extends Controller
         return view('admin.file_datas.index', compact('file_datas'));
     }
 
+
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function dueindex()
+    {
+        $file_datas = File_data::with('ie_data')->where('status', 'Unpaid')->get();
+        return view('admin.file_datas.dueindex', compact('file_datas'));
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function paidindex()
+    {
+        $file_datas = File_data::with('ie_data')->where('status', 'Paid')->get();
+        return view('admin.file_datas.paidindex', compact('file_datas'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -32,35 +51,6 @@ class FileDataController extends Controller
     {
         $ie_datas = Ie_data::select('id', 'org_name')->orderBy('org_name')->get();
         return view('admin.file_datas.create', compact('ie_datas'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function createin()
-    {
-        $year = Carbon::now()->year; // Get the current year
-        $file_data = File_data::latest()->with('agent')->first(); // Retrieve the latest File_data with agent relationship
-
-        // Determine the next lodgement number
-        $currentYear = Carbon::now()->year;
-        $file_data_year = $file_data ? $file_data->created_at->year : null;
-
-        if ($file_data && $file_data_year == $currentYear) {
-            $next_lodgement_no = ($file_data->lodgement_no == '94020')
-            ? 1
-            : ($file_data->lodgement_no ?? 0) + 1;
-        } else {
-            $next_lodgement_no = 1; // Reset to 1 at the start of a new year
-        }
-
-        // Get the last agent name and ID if available
-        $lastagent = $file_data->agent->name ?? null;
-        $lastagent_id = $file_data->agent->id ?? null;
-
-        $agents = Agent::select('id', 'name', 'ain_no')->orderBy('name')->get(); // Retrieve only id, name, and ain_number of all agents, ordered by name
-        // Return the view for creating a new File_data record
-        return view('admin.file_datas.createin', compact('next_lodgement_no', 'file_data', 'lastagent', 'lastagent_id', 'agents', 'year'));
     }
 
 
@@ -92,12 +82,9 @@ class FileDataController extends Controller
      */
     public function edit(File_data $file_data)
     {
-
-        $now = Carbon::now();
-        $year = $now->year;
-        $file_data = File_data::where('id', $file_data->id)->with('ie_data')->first();
-        $file_data->load(['ie_data', 'agent']);
-        return view('admin.file_datas.edit', compact('file_data','year'));
+        $file_data->load(['ie_data']);
+        $ie_datas = Ie_data::select('id', 'org_name')->orderBy('org_name')->get();
+        return view('admin.file_datas.edit', compact('file_data','ie_datas'));
     }
     /**
      * Show the form for printing/editing the specified resource.
@@ -119,121 +106,90 @@ class FileDataController extends Controller
      */
     public function update(UpdateFile_dataRequest $request, File_data $file_data)
     {
-        if ($request->agentain != null) {
-            $agent_id = Agent::where('name', $request->agentain)->value('id');
-            $file_data->agent_id = $agent_id;
-        }
-        // Assign ie_data_id if exist, if not create a new one and assign it
-
-        if (!empty($request->impexp)) {
-            $ie_data = Ie_data::firstOrCreate(
-                ['name' => $request->impexp], // Check if an Ie_data with this name exists
-                ['ie' => 'Import'] // If not, create it with the default 'Import' value
-            );
-
-            $file_data->ie_data_id = $ie_data->id; // Assign the ie_data_id to the file_data
-        }
-        // Calculate the number of pages
-        $pages = $request->page;
-        $numberofPages = ($pages > 1) ? ceil((($pages - 1) / 3 + 1)) : 1;
-        $file_data->no_of_items = $numberofPages;
-        $file_data->lodgement_no = $request->lodgement_no;
-        $file_data->manifest_no = $request->manifest_no;
-
-
-        $file_data->be_date = $request->be_date; // Automatically handled by the model
-        $file_data->lodgement_date = $request->lodgement_date; // Automatically handled by the model
-        $file_data->manifest_date = $request->manifest_date; // Automatically handled by the model
-
-
-        $file_data->ie_type = $request->ie_type;
-        $file_data->group = $request->group;
-        $file_data->goods_name = $request->goods_name;
-        $file_data->goods_type = $request->goods_type;
-        $file_data->be_number = $request->be_number;
-        $file_data->page = $request->page;
-
-        $file_data->fees = $request->fees;
-        $file_data->status = 'Delivered';
-        $file_data->delivered_at = Carbon::now();
-        $file_data->save();
-
-        // Check if SMS has already been sent
-        if (!$file_data->sms_sent) {
-            $agent = Agent::where('id', $file_data->agent_id)->first();
-            $agent_email = $agent->email;
-            $agent_phone = $agent->phone;
-
-            // Sms Data
-            $ie_name = Ie_data::where('id', $file_data->ie_data_id)->first();
-            $ie_name = $ie_name->name;
-            $newSmsData = 'Benapole C&F Agents Association, Your register B/E No: ' . $file_data->be_number . ' Date:' . $file_data->be_date . ' Im/Ex: ' . $ie_name . ', Manifest No: ' . $file_data->manifest_no . ' Date:' . $file_data->manifest_date . '. Thank you.';
-
-            $sendSMS = Http::post(env('SSL_SMS_BASE_URL'), [
-                'api_token' => env('SSL_SMS_API_TOKEN'),
-                'sid' => env('SSL_SMS_SID'),
-                'msisdn' => $agent_phone,
-                'sms' => $newSmsData,
-                'csms_id' => bin2hex(random_bytes(10)),
-            ]);
-            $responseData = $sendSMS->json();
-
-
-            // Extract status for logging
-            $status = $responseData['status'] ?? 'FAILED';
-            $statusCode = $responseData['status_code'] ?? 'Unknown';
-            $statusMessage = $responseData['error_message'] ?? 'No error message';
-
-            // Log the SMS response
-            LogHelper::log(
-                action: "SMS Sent to $agent_phone",
-                description: "Status: $status, Code: $statusCode, Message: $statusMessage",
-                log_type: 'sms',
-                responseData: $responseData
-            );
-
-            // Mark SMS as sent
-            $file_data->sms_sent = true;
-            $file_data->save();
-        }
-
-        // Email sending logic
         try {
-            if ($agent_email) {
-                Mail::send('emails.file_notification', [
-                    'be_number' => $file_data->be_number,
-                    'be_date' => $file_data->be_date,
-                    'ie_name' => $ie_name,
-                    'manifest_no' => $file_data->manifest_no,
-                    'manifest_date' => $file_data->manifest_date,
-                    'agent_name' => $agent->name
-                ], function($message) use ($agent_email, $agent) {
-                    $message->to($agent_email, $agent->name)
-                        ->subject('File Registration Notification - Benapole C&F Agents Association');
-                });
+            // Bill values
+            $file_data->bill_coat_fee = $request->bill_coat_fee;
+            $file_data->bill_asso_be_entry_fee = $request->bill_asso_be_entry_fee;
+            $file_data->bill_cargo_branch_aro = $request->bill_cargo_branch_aro;
+            $file_data->bill_cargo_branch_ro = $request->bill_cargo_branch_ro;
+            $file_data->bill_cargo_branch_ac = $request->bill_cargo_branch_ac;
+            $file_data->bill_manifest_dept = $request->bill_manifest_dept;
+            $file_data->bill_fourtytwo_shed_aro = $request->bill_fourtytwo_shed_aro;
+            $file_data->bill_examination_normal = $request->bill_examination_normal;
+            $file_data->bill_examination_irm = $request->bill_examination_irm;
+            $file_data->bill_examination_goinda = $request->bill_examination_goinda;
+            $file_data->bill_assessement_aro = $request->bill_assessement_aro;
+            $file_data->bill_assessement_ro = $request->bill_assessement_ro;
+            $file_data->bill_assessement_ac = $request->bill_assessement_ac;
+            $file_data->bill_assessement_dc = $request->bill_assessement_dc;
+            $file_data->bill_assessement_jc = $request->bill_assessement_jc;
+            $file_data->bill_assessement_adc = $request->bill_assessement_adc;
+            $file_data->bill_assessement_commissionar = $request->bill_assessement_commissionar;
+            $file_data->bill_lab_test_fee_receptable = $request->bill_lab_test_fee_receptable;
+            $file_data->bill_lab_test_fee_sample_processing = $request->bill_lab_test_fee_sample_processing;
+            $file_data->bill_group_sipay = $request->bill_group_sipay;
+            $file_data->bill_bank_chalan = $request->bill_bank_chalan;
+            $file_data->bill_bank_chalan_evening = $request->bill_bank_chalan_evening;
+            $file_data->bill_delivery_cost = $request->bill_delivery_cost;
+            $file_data->bill_unstamping_dep_ro = $request->bill_unstamping_dep_ro;
+            $file_data->bill_unstamping_dep_aro = $request->bill_unstamping_dep_aro;
+            $file_data->bill_load_unload = $request->bill_load_unload;
+            $file_data->bill_shed = $request->bill_shed;
+            $file_data->bill_exit = $request->bill_exit;
+            $file_data->bill_finaly_out_get = $request->bill_finaly_out_get;
+            $file_data->bill_file_commission = $request->bill_file_commission;
+            $file_data->bill_other_cost = $request->bill_other_cost;
+            $file_data->bill_total = $request->bill_total;
 
-                LogHelper::log(
-                    action: "Email Sent",
-                    description: "Email notification sent to agent {$agent->name} at {$agent_email}",
-                    log_type: 'email'
-                );
-            }
-        } catch (\Exception $e) {
-            LogHelper::log(
-                action: "Email Failed",
-                description: "Failed to send email to {$agent_email}: " . $e->getMessage(),
-                log_type: 'error'
-            );
-        }
+            //Actual values
+            $file_data->actual_coat_fee = $request->actual_coat_fee;
+            $file_data->actual_asso_be_entry_fee = $request->actual_asso_be_entry_fee;
+            $file_data->actual_cargo_branch_aro = $request->actual_cargo_branch_aro;
+            $file_data->actual_cargo_branch_ro = $request->actual_cargo_branch_ro;
+            $file_data->actual_cargo_branch_ac = $request->actual_cargo_branch_ac;
+            $file_data->actual_manifest_dept = $request->actual_manifest_dept;
+            $file_data->actual_fourtytwo_shed_aro = $request->actual_fourtytwo_shed_aro;
+            $file_data->actual_examination_normal = $request->actual_examination_normal;
+            $file_data->actual_examination_irm = $request->actual_examination_irm;
+            $file_data->actual_examination_goinda = $request->actual_examination_goinda;
+            $file_data->actual_assessement_aro = $request->actual_assessement_aro;
+            $file_data->actual_assessement_ro = $request->actual_assessement_ro;
+            $file_data->actual_assessement_ac = $request->actual_assessement_ac;
+            $file_data->actual_assessement_dc = $request->actual_assessement_dc;
+            $file_data->actual_assessement_jc = $request->actual_assessement_jc;
+            $file_data->actual_assessement_adc = $request->actual_assessement_adc;
+            $file_data->actual_assessement_commissionar = $request->actual_assessement_commissionar;
+            $file_data->actual_lab_test_fee_receptable = $request->actual_lab_test_fee_receptable;
+            $file_data->actual_lab_test_fee_sample_processing = $request->actual_lab_test_fee_sample_processing;
+            $file_data->actual_group_sipay = $request->actual_group_sipay;
+            $file_data->actual_bank_chalan = $request->actual_bank_chalan;
+            $file_data->actual_bank_chalan_evening = $request->actual_bank_chalan_evening;
+            $file_data->actual_delivery_cost = $request->actual_delivery_cost;
+            $file_data->actual_unstamping_dep_ro = $request->actual_unstamping_dep_ro;
+            $file_data->actual_unstamping_dep_aro = $request->actual_unstamping_dep_aro;
+            $file_data->actual_load_unload = $request->actual_load_unload;
+            $file_data->actual_shed = $request->actual_shed;
+            $file_data->actual_exit = $request->actual_exit;
+            $file_data->actual_finaly_out_get = $request->actual_finaly_out_get;
+            $file_data->actual_file_commission = $request->actual_file_commission;
+            $file_data->actual_other_cost = $request->actual_other_cost;
+            $file_data->actual_total = $request->actual_total;
 
-        if (Auth::user()->hasRole('operator')) {
-            // Mark SMS as sent
-            $file_data->deliverer_id = Auth::user()->id;
+
+            // Save all changes
             $file_data->save();
-            return redirect()->route('dashboard')->with(['status' => 200, 'message' => 'File Operated and Delivered!']);
+
+            return redirect()->route('file_datas.edit', $file_data->id)
+                ->with(['status' => 200, 'message' => 'File data updated successfully!']);
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()
+                ->with(['status' => 500, 'message' => 'Error updating file: ' . $e->getMessage()])
+                ->withInput();
         }
 
-        return redirect()->route('file_datas.show', $file_data->id);
+        return redirect()->route('file_datas.edit', $file_data->id);
     }
 
     /**
@@ -264,7 +220,6 @@ class FileDataController extends Controller
     }
 
     public function isBeNumberUnique(Request $request){
-
         // $year = date('Y');
         $be_number = $request->be_number;
 
@@ -273,5 +228,79 @@ class FileDataController extends Controller
 
       //  return $file_data;
       return response()->json(['success' => $file_data]);
+    }
+
+    /**
+     * Update the print data for the specified resource.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\File_data $file_data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateprint(Request $request, File_data $file_data)
+    {
+        try {
+            // Update all bill-related fields from form
+            $file_data->bill_coat_fee = $request->bill_coat_fee;
+            $file_data->bill_asso_be_entry_fee = $request->bill_asso_be_entry_fee;
+            $file_data->bill_cargo_branch_aro = $request->bill_cargo_branch_aro;
+            $file_data->bill_cargo_branch_ro = $request->bill_cargo_branch_ro;
+            $file_data->bill_cargo_branch_ac = $request->bill_cargo_branch_ac;
+            $file_data->bill_manifest_dept = $request->bill_manifest_dept;
+            $file_data->bill_fourtytwo_shed_aro = $request->bill_fourtytwo_shed_aro;
+            $file_data->bill_examination_normal = $request->bill_examination_normal;
+            $file_data->bill_examination_irm = $request->bill_examination_irm;
+            $file_data->bill_examination_goinda = $request->bill_examination_goinda;
+            $file_data->bill_assessement_aro = $request->bill_assessement_aro;
+            $file_data->bill_assessement_ro = $request->bill_assessement_ro;
+            $file_data->bill_assessement_ac = $request->bill_assessement_ac;
+            $file_data->bill_assessement_dc = $request->bill_assessement_dc;
+            $file_data->bill_assessement_jc = $request->bill_assessement_jc;
+            $file_data->bill_assessement_adc = $request->bill_assessement_adc;
+            $file_data->bill_assessement_commissionar = $request->bill_assessement_commissionar;
+            $file_data->bill_lab_test_fee_receptable = $request->bill_lab_test_fee_receptable;
+            $file_data->bill_lab_test_fee_sample_processing = $request->bill_lab_test_fee_sample_processing;
+            $file_data->bill_group_sipay = $request->bill_group_sipay;
+            $file_data->bill_bank_chalan = $request->bill_bank_chalan;
+            $file_data->bill_bank_chalan_evening = $request->bill_bank_chalan_evening;
+            $file_data->bill_delivery_cost = $request->bill_delivery_cost;
+            $file_data->bill_unstamping_dep_ro = $request->bill_unstamping_dep_ro;
+            $file_data->bill_unstamping_dep_aro = $request->bill_unstamping_dep_aro;
+            $file_data->bill_load_unload = $request->bill_load_unload;
+            $file_data->bill_shed = $request->bill_shed;
+            $file_data->bill_exit = $request->bill_exit;
+            $file_data->bill_finaly_out_get = $request->bill_finaly_out_get;
+            $file_data->bill_file_commission = $request->bill_file_commission;
+            $file_data->bill_other_cost = $request->bill_other_cost;
+            $file_data->bill_total = $request->bill_total;
+            $file_data->status = $request->status ?? 'Paid';
+
+            // Save all changes
+            $file_data->save();
+
+
+
+            // Return success response with print-ready data
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Bill updated successfully',
+                'file_data' => $file_data,
+                'print_data' => [
+                    'title' => 'Bill Voucher',
+                    'bill_no' => $file_data->bill_no,
+                    'date' => $file_data->file_date,
+                    'total' => number_format($file_data->bill_total, 2)
+                ]
+            ], 200);
+
+        } catch (\Exception $e) {
+
+            // Return error response
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error updating bill. Please try again or contact support.',
+                'debug_message' => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 }

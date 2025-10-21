@@ -182,6 +182,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('file_datas/updateprint/{file_data}', [FileDataController::class, 'updateprint'])->name('file_datas.updateprint');
 
 
+    Route::get('due_file_datas', [FileDataController::class, 'dueindex'])->name('file_datas.dueindex');
+    Route::get('paid_file_datas', [FileDataController::class, 'paidindex'])->name('file_datas.paidindex');
+
+
     // SMS routes
     Route::prefix('sms')->group(function () {
         Route::get('/send-sms', [SmsController::class, 'sendSms'])->name('sendSms');

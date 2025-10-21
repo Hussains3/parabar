@@ -31,7 +31,7 @@
 
 
 
-        <div class="card flex-grow max-w-2xl mx-auto">
+        <div class="card flex-grow max-w-2xl mx-auto printdiv">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <p>Date:{{$file_data->file_date}}</p>
@@ -50,9 +50,9 @@
                 <p class="text-center mb-4">Mozid Tower (3rd floor),  Opposite of customs house,  Benapole, Jashore, Bangladesh</p>
                 {{-- Form --}}
                 <form class="" id="fileReciveForm" enctype="multipart/form-data"
-                    action="{{ route('file_datas.store') }}" method="POST">
+                    action="{{ route('file_datas.updateprint', $file_data) }}" method="POST">
                     @csrf
-                    @method('POST')
+                    @method('PUT')
                     <div class="">
                         <div class="mb-2">
                             <div class="font-semibold text-base col-span-4">
@@ -340,8 +340,8 @@
 
                         <div class="self-end col-span-2 flex justify-end">
                             <input type="hidden" name="status" value="Paid">
-                            <input type="submit" value="Submit"
-                                class="font-mont px-10 py-4 bg-cyan-600 text-white font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 hover:scale-110"
+                            <input type="submit" value="Print & Save"
+                                class="font-mont print:hidden px-10 py-4 bg-cyan-600 text-white font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 hover:scale-110"
                                 id="baccountSaveBtn">
                         </div><!-- end -->
 
@@ -359,18 +359,72 @@
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script>
 
-            $(document).ready(function () {
-
+            // Initialize all event handlers
+            function initializeEventHandlers() {
+                // Handle number input changes
                 $('#fileReciveForm input[type="number"]').on('input', function() {
                     //Make sure all number inputs value should not be lower than 0.00
                     if (parseFloat($(this).val()) < 0) {
                         $(this).val('0.00');
                     }
-
                     calculateTotal();
                 });
+            }
+
+            $(document).ready(function () {
+                // Initialize handlers
+                initializeEventHandlers();
+
                 // Initial calculation
                 calculateTotal();
+
+                // Handle form submission
+                $('#fileReciveForm').on('submit', function(e) {
+                    e.preventDefault();
+
+                    const $form = $(this);
+                    const $submitBtn = $form.find('input[type="submit"]');
+
+                    // Disable submit button to prevent double submission
+                    $submitBtn.prop('disabled', true);
+
+                    $.ajax({
+                        url: $form.attr('action'),
+                        method: 'POST',
+                        data: $form.serialize(),
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        beforeSubmit: function(arr, $form, options) {
+                            console.log(data);
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                // Prepare print content
+                                const $printArea = $('.printdiv').clone();
+                                // Print the content
+                                const originalContent = $('body').html();
+                                $('body').empty().append($printArea);
+                                window.print();
+                                $('body').html(originalContent);
+
+                                // Re-initialize event handlers after restoring content
+                                initializeEventHandlers();
+                                calculateTotal();
+                            } else {
+                                alert('Error: ' + response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error details:', xhr.responseJSON || error);
+                            alert('Error submitting form. Please try again or contact support.');
+                        },
+                        complete: function() {
+                            // Re-enable submit button
+                            $submitBtn.prop('disabled', false);
+                        }
+                    });
+                });
             });
 
             // Calculate total cost
@@ -382,6 +436,16 @@
                 });
                 // Update the total field with 2 decimal places
                 $('#bill_total').val(total.toFixed(2));
+            }
+
+            // Print function
+            function printDiv() {
+                let printContent = $('.printdiv').html();
+                let originalContent = $('body').html();
+
+                $('body').html(printContent);
+                window.print();
+                $('body').html(originalContent);
             }
         </script>
     </x-slot>

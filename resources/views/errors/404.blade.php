@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-app-layout>
     {{-- Title --}}
     <x-slot name="title">Page Not Found</x-slot>
 
@@ -18,7 +18,7 @@
             <h1 class="text-4xl font-bold text-gray-800 mb-4">
                 Page Not Found
             </h1>
-            
+
             <p class="text-gray-600 mb-8">
                 Sorry, we couldn't find the page you're looking for.
             </p>
@@ -36,4 +36,4 @@
             </div>
         </div>
     </main>
-</x-guest-layout>
+</x-app-layout>

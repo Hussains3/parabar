@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-app-layout>
     {{-- Title --}}
     <x-slot name="title">Service Unavailable</x-slot>
 
@@ -18,7 +18,7 @@
             <h1 class="text-4xl font-bold text-gray-800 mb-4">
                 Service Unavailable
             </h1>
-            
+
             <p class="text-gray-600 mb-8">
                 Sorry, we are doing some maintenance. Please check back soon.
             </p>
@@ -41,4 +41,4 @@
             </p>
         </div>
     </main>
-</x-guest-layout>
+</x-app-layout>
