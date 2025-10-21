@@ -245,9 +245,10 @@ class OfficeCostController extends Controller
             ->orderBy('month')
             ->get();
 
+        // Calculate total amount and get categories
         $totalAmount = $summary->sum('total_amount');
-        $categories = CostCategory::all();
+        $categories = CostCategory::where('is_active', true)->get();
 
-        return view('admin.office_costs.report', compact('summary', 'totalAmount', 'categories'));
+        return view('admin.office_costs.report', compact('summary', 'totalAmount', 'categories', 'monthlyTrends'));
     }
 }
