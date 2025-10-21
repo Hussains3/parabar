@@ -13,7 +13,7 @@
                     {{-- Report Type --}}
                     <div>
                         <label for="report_type" class="block text-sm font-medium text-gray-700">Report Type</label>
-                        <select name="report_type" id="report_type" 
+                        <select name="report_type" id="report_type"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             onchange="toggleDateInputs(this.value)">
                             <option value="custom" {{ request('report_type', 'custom') == 'custom' ? 'selected' : '' }}>Custom Date Range</option>
@@ -28,13 +28,13 @@
                     <div id="dateRangeInputs" class="grid grid-cols-2 gap-4">
                         <div>
                             <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                            <input type="date" name="start_date" id="start_date" 
+                            <input type="date" name="start_date" id="start_date"
                                 value="{{ request('start_date', now()->startOfMonth()->format('Y-m-d')) }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         </div>
                         <div>
                             <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
-                            <input type="date" name="end_date" id="end_date" 
+                            <input type="date" name="end_date" id="end_date"
                                 value="{{ request('end_date', now()->format('Y-m-d')) }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         </div>
@@ -43,7 +43,7 @@
                     {{-- Category Filter --}}
                     <div>
                         <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
-                        <select name="category_id" id="category_id" 
+                        <select name="category_id" id="category_id"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             <option value="">All Categories</option>
                             @foreach($categories as $category)
@@ -57,7 +57,7 @@
                     {{-- Status Filter --}}
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                        <select name="status" id="status" 
+                        <select name="status" id="status"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             <option value="">All Status</option>
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -69,20 +69,20 @@
                     {{-- Amount Range --}}
                     <div>
                         <label for="min_amount" class="block text-sm font-medium text-gray-700">Min Amount</label>
-                        <input type="number" name="min_amount" id="min_amount" 
+                        <input type="number" name="min_amount" id="min_amount"
                             value="{{ request('min_amount') }}"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     </div>
                     <div>
                         <label for="max_amount" class="block text-sm font-medium text-gray-700">Max Amount</label>
-                        <input type="number" name="max_amount" id="max_amount" 
+                        <input type="number" name="max_amount" id="max_amount"
                             value="{{ request('max_amount') }}"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     </div>
                 </div>
 
                 <div class="flex justify-end space-x-3">
-                    <a href="{{ route('office-costs.report') }}" 
+                    <a href="{{ route('office-costs.report') }}"
                        class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200">
                         Reset Filters
                     </a>
