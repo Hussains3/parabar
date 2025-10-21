@@ -111,6 +111,7 @@ return new class extends Migration
             $table->integer('bill_total')->default(0);
 
             $table->foreignId('ie_data_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('status')->default('Unpaid');
             $table->timestamps();
         });
     }

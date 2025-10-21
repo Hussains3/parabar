@@ -19,7 +19,10 @@
                 <div class="px-4 py-2">
                     <div class="flex items-center justify-between">
                         <div class="text-start">
-                            <h4 class="card-title">Importer/Exporter Information</h4>
+                            <a href="{{route('ie_datas.index')}}">
+
+                                <h4 class="card-title">Importer/Exporter Information</h4>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -29,7 +32,10 @@
                 <div class="px-4 py-2">
                     <div class="flex items-center justify-between">
                         <div class="text-start">
-                            <h4 class="card-title">Input Bill Voucher Importer/Exporter</h4>
+                            <a href="{{route('file_datas.create')}}">
+
+                                <h4 class="card-title">Input Bill Voucher Importer/Exporter</h4>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -39,7 +45,10 @@
                 <div class="px-4 py-2">
                     <div class="flex items-center justify-between">
                         <div class="text-start">
-                            <h4 class="card-title">Bill Print</h4>
+                            <a href="{{route('file_datas.index')}}">
+
+                                <h4 class="card-title">Bill Print</h4>
+                            </a>
                         </div>
                     </div>
                 </div>

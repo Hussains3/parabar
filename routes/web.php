@@ -168,7 +168,19 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('file_datas')->group(function () {
         Route::get('/createin', [FileDataController::class, 'createin'])->name('file_datas.createin');
     });
-    Route::resource('file_datas', FileDataController::class);
+
+    // Route::resource('file_datas', FileDataController::class);
+    Route::get('file_datas', [FileDataController::class, 'index'])->name('file_datas.index');
+    Route::get('file_datas/create', [FileDataController::class, 'create'])->name('file_datas.create');
+    Route::post('file_datas', [FileDataController::class, 'store'])->name('file_datas.store');
+    Route::get('file_datas/{file_data}', [FileDataController::class, 'show'])->name('file_datas.show');
+    Route::get('file_datas/{file_data}/edit', [FileDataController::class, 'edit'])->name('file_datas.edit');
+    Route::put('file_datas/{file_data}', [FileDataController::class, 'update'])->name('file_datas.update');
+    Route::delete('file_datas/{file_data}', [FileDataController::class, 'destroy'])->name('file_datas.destroy');
+
+    Route::get('file_datas/{file_data}/editprint', [FileDataController::class, 'editprint'])->name('file_datas.editprint');
+    Route::put('file_datas/updateprint/{file_data}', [FileDataController::class, 'updateprint'])->name('file_datas.updateprint');
+
 
     // SMS routes
     Route::prefix('sms')->group(function () {

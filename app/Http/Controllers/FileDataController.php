@@ -21,7 +21,8 @@ class FileDataController extends Controller
      */
     public function index()
     {
-        //
+        $file_datas = File_data::with('ie_data')->orderBy('status', 'DESC')->limit(1000)->get();
+        return view('admin.file_datas.index', compact('file_datas'));
     }
 
     /**
@@ -66,157 +67,11 @@ class FileDataController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreFile_dataRequest $request)
     {
-        // Validate the request, including checking for unique `be_number`
-        $request->validate([
-            'be_number' => 'nullable|unique:file_datas,be_number',
-            'manifest_no' => 'required|string',
-            'page' => 'nullable|integer',
-            'agentain' => 'nullable|string',
-        ]);
-
-        // Retrieve the latest File_data record
-        $latest_file_data = File_data::latest()->first();
-        // Determine the next lodgement number
-        if ($latest_file_data) {
-            if ($latest_file_data->lodgement_no == '94020') {
-                $next_lodgement_no = 1;
-            } else {
-                $next_lodgement_no = $latest_file_data->lodgement_no + 1;
-            }
-        } else {
-            $next_lodgement_no = 1;
-        }
-
-        // Check if the manifest_no already exists for the current year
-        $currentYear = Carbon::now()->year;
-        $isDuplicateManifest = File_data::where('manifest_no', $request->manifest_no)
-            ->whereYear('created_at', $currentYear)
-            ->exists();
-        $agent_id = null;
-        $ie_data_id = null;
-
-        if ($request->agentain != null) {
-            $agent_id = Agent::where('name', $request->agentain)->value('id');
-        }
-
-        if ($request->impexp != null) {
-            $ie_data_id = Ie_data::where('name', $request->impexp)->value('id');
-        }
-
-        $file_data = new File_data();
-
-        $file_data->be_date = $request->be_date; // Automatically handled by the model
-        $file_data->lodgement_date = $request->lodgement_date; // Automatically handled by the model
-        $file_data->manifest_date = $request->manifest_date; // Automatically handled by the model
-
-        // Lodgement No
-        $file_data->lodgement_no = $next_lodgement_no;
-
-        // Manifest No
-        if ($request->manifest_no) {
-            $file_data->manifest_no = $request->manifest_no;
-        }
-        if ($request->be_number) {
-            $file_data->be_number = $request->be_number;
-        }
-        if ($request->page) {
-            $pages = $request->page;
-            $numberofPages = ($pages > 1) ? ceil((($pages - 1) / 3 + 1)) : 1;
-            $file_data->page = $pages;
-            $file_data->no_of_items = $numberofPages;
-        }
-
-        // Assign agent_id if exist
-        if ($agent_id) {
-            $file_data->agent_id = $agent_id;
-        }
-        // Assign ie_data_id if exist
-        if ($ie_data_id) {
-            $file_data->ie_data_id = $ie_data_id;
-        }
-
-        $file_data->status = 'Received';
-        $file_data->reciver_id = Auth::user()->id;
-        $file_data->save();
-
-        if (Auth::user()->hasRole('extra') && $request->be_number) {
-
-
-            // Check if SMS has already been sent
-            if (!$file_data->sms_sent) {
-                $agent = Agent::where('id', $agent_id)->first();
-                $agent_email = $agent->email;
-                $agent_phone = $agent->phone;
-
-                // Sms Data
-                $ie_name = Ie_data::where('id', $ie_data_id)->first();
-                $ie_name = $ie_name->name;
-                $newSmsData = 'Benapole C&F Agents Association, Your register B/E No: ' . $request->be_number . ' Date:' . $request->be_date . ' Im/Ex: ' . $ie_name . ', Manifest No: ' . $request->manifest_no . ' Date:' . $request->manifest_date . '. Thank you.';
-
-                $sendSMS = Http::post(env('SSL_SMS_BASE_URL'), [
-                    'api_token' => env('SSL_SMS_API_TOKEN'),
-                    'sid' => env('SSL_SMS_SID'),
-                    'msisdn' => $agent_phone,
-                    'sms' => $newSmsData,
-                    'csms_id' => bin2hex(random_bytes(10)),
-                ]);
-                $responseData = $sendSMS->json();
-
-
-                // Extract status for logging
-                $status = $responseData['status'] ?? 'FAILED';
-                $statusCode = $responseData['status_code'] ?? 'Unknown';
-                $statusMessage = $responseData['error_message'] ?? 'No error message';
-
-                // Log the SMS response
-                LogHelper::log(
-                    action: "SMS Sent to $agent_phone",
-                    description: "Status: $status, Code: $statusCode, Message: $statusMessage",
-                    log_type: 'sms',
-                    responseData: $responseData
-                );
-
-                // Mark SMS as sent
-                $file_data->status = 'Printed';
-                $file_data->sms_sent = true;
-                $file_data->save();
-            }
-
-            // Email sending logic
-            try {
-                if ($agent_email) {
-                    Mail::send('emails.file_notification', [
-                        'be_number' => $request->be_number,
-                        'be_date' => $request->be_date,
-                        'ie_name' => $ie_name,
-                        'manifest_no' => $request->manifest_no,
-                        'manifest_date' => $request->manifest_date,
-                        'agent_name' => $agent->name
-                    ], function($message) use ($agent_email, $agent) {
-                        $message->to($agent_email, $agent->name)
-                            ->subject('File Registration Notification - Benapole C&F Agents Association');
-                    });
-
-                    LogHelper::log(
-                        action: "Email Sent",
-                        description: "Email notification sent to agent {$agent->name} at {$agent_email}",
-                        log_type: 'email'
-                    );
-                }
-            } catch (\Exception $e) {
-                LogHelper::log(
-                    action: "Email Failed",
-                    description: "Failed to send email to {$agent_email}: " . $e->getMessage(),
-                    log_type: 'error'
-                );
-            }
-
-            return redirect()->route('file_datas.show', $file_data->id)->with(['status' => 200, 'message' => 'File Received and Printed!']);
-        }
-
-        return redirect()->route('file_datas.createin')->with(['status' => 200, 'message' => 'File Received!']);
+        // Store the File_data record
+        $file_data = File_data::create($request->validated());
+        return redirect()->route('file_datas.index')->with(['status' => 200, 'message' => 'Invoice Created!']);
     }
 
     /**
@@ -240,10 +95,24 @@ class FileDataController extends Controller
 
         $now = Carbon::now();
         $year = $now->year;
-        $file_data = File_data::where('id', $file_data->id)->with('ie_data')->with('agent')->first();
+        $file_data = File_data::where('id', $file_data->id)->with('ie_data')->first();
         $file_data->load(['ie_data', 'agent']);
         return view('admin.file_datas.edit', compact('file_data','year'));
     }
+    /**
+     * Show the form for printing/editing the specified resource.
+     *
+     * @param \App\Models\File_data $file_data The file data instance to edit
+     * @return \Illuminate\View\View Returns the edit print view with file data
+     */
+    public function editprint(File_data $file_data)
+    {
+        // Eager load both ie_data and agent relationships in one query
+        $ie_datas = Ie_data::select('id', 'org_name')->orderBy('org_name')->get();
+        $file_data->load(['ie_data']);
+        return view('admin.file_datas.editprint', compact('file_data','ie_datas'));
+    }
+
 
     /**
      * Update the specified resource in storage.
