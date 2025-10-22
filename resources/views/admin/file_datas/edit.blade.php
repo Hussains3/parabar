@@ -1,6 +1,6 @@
 <x-app-layout>
     {{-- Title --}}
-    <x-slot name="title">Parint Bill Voucher</x-slot>
+    <x-slot name="title">Edit Bill Voucher</x-slot>
 
 
     {{-- Header Style --}}
@@ -26,63 +26,175 @@
 
     {{-- Page Content --}}
     <div class="flex flex-col gap-6">
+        <!-- Payment Section -->
+        <div class="card max-w-2xl mx-auto">
+            <div class="p-6">
+                <h2 class="text-xl font-semibold mb-4">Payment Management</h2>
 
+                <div class="mb-4">
+                    <div class="flex justify-between mb-2">
+                        <span>Payment Status:</span>
+                        <span class="font-semibold">{{ ($file_data->status) }}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span>Total Bill Amount:</span>
+                        <span class="font-semibold">৳{{ number_format($file_data->bill_total, 2) }}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span>Total Paid:</span>
+                        <span class="font-semibold text-green-600">৳{{ number_format($file_data->total_paid ?? 0, 2) }}</span>
+                    </div>
+                    <div class="flex justify-between mb-4">
+                        <span>Balance:</span>
+                        <span class="font-semibold text-red-600">৳{{ number_format($file_data->bill_total - $file_data->total_paid, 2) }}</span>
+                    </div>
+                </div>
 
+                <!-- Payment History -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Payment History</h3>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        @if(!empty($file_data->payments))
+                            <div class="space-y-2">
+                                @foreach($file_data->payments as $payment)
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-200 last:border-0">
+                                        <div>
+                                            <span class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($payment['date'])->format('d M, Y') }}</span>
+                                        </div>
+                                        <div class="font-medium">৳{{ number_format($payment['amount'], 2) }}</div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-gray-500 text-sm">No payments recorded yet.</p>
+                        @endif
+                    </div>
+                </div>
 
-
+                <!-- Add New Payment -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">Add Payment</h3>
+                    <form action="{{ route('file_datas.add-payment', $file_data->id) }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="amount" class="block">Amount</label>
+                                <input type="number" step="1" name="amount" id="amount" required
+                                    class="forn-input"
+                                    max="{{$file_data->bill_total-$file_data->total_paid}}"
+                                >
+                            </div>
+                            <div>
+                                <label for="payment_date" class="block">Payment Date</label>
+                                <input type="date" name="payment_date" id="payment_date" required
+                                    class="forn-input"
+                                    value="{{ date('Y-m-d') }}"
+                                >
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="">
+                                    <input type="radio" name="status" id="auto" checked>
+                                    <label for="auto">Auto</label>
+                                </div>
+                                <div class="">
+                                    <input type="radio" name="status" id="unpaid">
+                                    <label for="unpaid">Unpaid</label>
+                                </div>
+                                <div class="">
+                                    <input type="radio" name="status" id="partial">
+                                    <label for="partial">Partial</label>
+                                </div>
+                                <div class="">
+                                    <input type="radio" name="status" id="paid">
+                                    <label for="paid">Paid</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Record Payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="card flex-grow max-w-2xl mx-auto printdiv">
             <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <p>Date:{{$file_data->file_date}}</p>
-                    <div class="flex flex-col items-center">
-                        <div class="flex gap-2 items-center">
-                            <img src="{{ asset('bcnf.png') }}" alt="Logo" class="h-12 w-auto">
-                            <div class="">
-                                <p class="uppercase font-bold text-xl ">Parabar Shipping</p>
-                                <p class="uppercase ">since 1984</p>
 
-                            </div>
-                        </div>
-                    </div>
-                    <p>Bill No: {{$file_data->bill_no}}</p>
-                </div>
-                <p class="text-center mb-4">Mozid Tower (3rd floor),  Opposite of customs house,  Benapole, Jashore, Bangladesh</p>
                 {{-- Form --}}
                 <form class="" id="fileReciveForm" enctype="multipart/form-data"
                     action="{{ route('file_datas.update', $file_data) }}" method="POST">
                     @csrf
                     @method('PUT')
+                    {{-- Section One --}}
+                    <div class="grid grid-cols-4 gap-4 mb-4 bg-center bg-no-repeat bg-contain bg-opacity-10 backdrop-blur-2xl"
+                        style="background-image: url('{{ asset('bcnft.png') }}');">
+
+
+                        <div class="col-span-3">
+                            <label for="manifest_no" class="block mb-2">Importer/Exporter</label>
+                            <select name="ie_data_id" id="ie_data_id" class="form-input">
+                                @foreach ($ie_datas as $item)
+                                    <option value="{{ $item->id }}"
+                                        @if ($file_data->ie_data_id == $item->id) selected @endif>{{ $item->org_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div> <!-- end -->
+
+                        <div class="">
+                            <label for="manifest_number" class="block mb-2">Manifest Number</label>
+                            <input type="text" class="form-input" id="manifest_number" name="manifest_number" required value="{{$file_data->manifest_number}}">
+
+                        </div> <!-- end -->
+
+                        <div class="">
+                            <label for="be_number" class="block mb-2">B/E Number</label>
+                            <input type="text" class="form-input" id="be_number" name="be_number" value="{{$file_data->be_number}}">
+                        </div> <!-- end -->
+                        <div class="">
+                            <label for="file_date" class="block mb-2">Date</label>
+                            <input type="text" class="form-input" id="file_date" name="file_date" value="{{$file_data->file_date}}">
+                            {{-- skipme --}}
+                        </div> <!-- end -->
+                        <div class="">
+                            <label for="package" class="block mb-2">Package</label>
+                            <input type="text" class="form-input" id="package" name="package" required value="{{$file_data->package}}">
+
+                        </div> <!-- end -->
+                        <div class="">
+                            <label for="lc_no" class="block mb-2">LC Number</label>
+                            <input type="text" class="form-input" id="lc_no" name="lc_no" required value="{{$file_data->lc_no}}">
+
+                        </div> <!-- end -->
+                        <div class="">
+                            <label for="lc_value" class="block mb-2">LC Value</label>
+                            <input type="number" class="form-input" id="lc_value" name="lc_value" required value="{{$file_data->lc_value}}">
+
+                        </div> <!-- end -->
+                        <div class="col-span-2">
+                            <label for="lc_bank" class="block mb-2">LC Bank</label>
+                            <input list="banks" class="form-input" name="lc_bank" id="lc_bank" required value="{{$file_data->lc_bank}}">
+
+                            <datalist id="banks">
+                                @php
+                                    $banksJson = file_get_contents(base_path('banks.json'));
+                                    $banks = json_decode($banksJson, true);
+                                @endphp
+                                @foreach ($banks as $bank)
+                                    <option value="{{ $bank['BankName'] }}">
+                                @endforeach
+                            </datalist>
+
+                        </div> <!-- end -->
+                    </div>
                     <div class="">
                         <div class="mb-2">
                             <div class="font-semibold text-base col-span-4">
-                                <p>Importer/Exporter: {{$file_data->ie_data->org_name}}</p>
+                                <p>Bill Number: {{$file_data->bill_no}}</p>
                             </div> <!-- end -->
-                            <div class="flex justify-between gap-8">
-                                <div class="">
-                                    <div class=" text-base col-span-2">
-                                        <p>Manifest Number: {{$file_data->manifest_number}}</p>
-                                    </div> <!-- end -->
-                                    <div class=" text-base ">
-                                        <p>B/E Number: {{$file_data->be_number}}</p>
-                                    </div> <!-- end -->
-                                    <div class=" text-base ">
-                                        <p>Package: {{$file_data->package}}</p>
-                                    </div> <!-- end -->
-                                </div>
-                                <div class="">
-                                    <div class=" text-base ">
-                                        <p>LC Number: {{$file_data->lc_no}}</p>
-                                    </div> <!-- end -->
-                                    <div class=" text-base ">
-                                        <p>LC Value: {{$file_data->lc_value}}</p>
-                                    </div> <!-- end -->
-                                </div>
-                            </div>
-                            <div class="text-base col-span-2">
-                                <p>LC Bank: {{$file_data->lc_bank}}</p>
-                            </div> <!-- end -->
-
                         </div>
                         {{-- Bill table --}}
                         <div class="overflow-x-auto">

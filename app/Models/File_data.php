@@ -14,6 +14,9 @@ class File_data extends Model
         'created_at' => 'datetime:H:i',
         'updated_at' => 'datetime:H:i',
         'delivered_at' => 'datetime:H:i',
+        'payments' => 'array',
+        'total_paid' => 'decimal:2',
+        'balance' => 'decimal:2',
     ];
 
     // Define fillable attributes for mass assignment
@@ -67,6 +70,9 @@ class File_data extends Model
         'total_actual_fee',
         'total_bill_fee',
         'ie_data_id',
+        'total_paid',
+        'payments',
+        'balance',
     ];
 
     // Accessor: Converts Y-m-d to d/m/Y when retrieving lodgement_date

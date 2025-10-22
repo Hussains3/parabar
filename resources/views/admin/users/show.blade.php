@@ -8,236 +8,180 @@
     </x-slot>
 
     {{-- Page Content --}}
-    <div class="flex gap-6">
-
-        <div class="card">
+    <div class="flex flex-col gap-6">
+        <!-- User Profile Card -->
+        <div class="card flex-grow">
             <div class="p-6">
-                <div class="flex justify-between items-center">
-                    <div class="">
-                        <h1 class="text-2xl font-semibold mt-4">{{$user->name}}</h1>
-                        <p class="">Email: <span class="text-seagreen">{{$user->email}}</span></p>
-                        <p class="">Created At: <span class="text-seagreen">{{$user->created_at}}</span></p>
-                        <p class="">Updated At: <span class="text-seagreen">{{$user->updated_at}}</span></p>
-                        <input type="hidden" name="" id="userid" value="{{$user->id}}">
+                <div class="flex justify-between items-start">
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-4 mb-6">
+                            @if ($user->photo)
+                                <img src="{{asset($user->photo)}}" alt="{{$user->name}}'s photo" class="w-24 h-24 rounded-full object-cover border-4 border-seagreen">
+                            @else
+                                <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
+                                    <span class="text-3xl text-gray-500">{{strtoupper(substr($user->name, 0, 1))}}</span>
+                                </div>
+                            @endif
+                            <div>
+                                <h1 class="text-3xl font-bold text-gray-800">{{$user->name}}</h1>
+                                <div class="flex gap-2 mt-2">
+                                    @foreach ($user->roles as $role)
+                                        <span class="px-3 py-1 text-sm font-semibold bg-seagreen text-white rounded-full">{{$role->name}}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <!-- Basic Information -->
+                            <div class="space-y-4">
+                                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Basic Information</h2>
+                                <div class="space-y-2">
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">User ID:</span>
+                                        <span class="font-medium">{{$user->id}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Email:</span>
+                                        <span class="font-medium text-seagreen">{{$user->email}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Phone:</span>
+                                        <span class="font-medium">{{$user->phone ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Address:</span>
+                                        <span class="font-medium">{{$user->address ?? 'Not provided'}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Contact Information -->
+                            <div class="space-y-4">
+                                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Contact Information</h2>
+                                <div class="space-y-2">
+                                    <!-- Primary Contact -->
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Phone:</span>
+                                        <span class="font-medium">{{$user->phone ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">WhatsApp:</span>
+                                        <span class="font-medium">{{$user->whatsapp ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Email:</span>
+                                        <span class="font-medium text-seagreen">{{$user->email}}</span>
+                                    </p>
+
+                                    <!-- Family Contacts -->
+                                    <div class="mt-4 pt-4 border-t">
+                                        <p class="text-sm font-semibold text-gray-700 mb-2">Family Contacts</p>
+                                        <div class="space-y-2">
+                                            <p class="flex items-center">
+                                                <span class="w-32 text-gray-600">Father Mobile:</span>
+                                                <span class="font-medium">{{$user->father_mobile ?? 'Not provided'}}</span>
+                                            </p>
+                                            <p class="flex items-center">
+                                                <span class="w-32 text-gray-600">Mother Mobile:</span>
+                                                <span class="font-medium">{{$user->mother_mobile ?? 'Not provided'}}</span>
+                                            </p>
+                                            @if($user->wife_name)
+                                            <p class="flex items-center">
+                                                <span class="w-32 text-gray-600">Wife Mobile:</span>
+                                                <span class="font-medium">{{$user->wife_mobile ?? 'Not provided'}}</span>
+                                            </p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <!-- Addresses -->
+                                    <div class="mt-4 pt-4 border-t">
+                                        <p class="text-sm font-semibold text-gray-700 mb-2">Addresses</p>
+                                        <div class="space-y-2">
+                                            <p class="flex items-start">
+                                                <span class="w-32 text-gray-600">Present:</span>
+                                                <span class="font-medium flex-1">{{$user->address ?? 'Not provided'}}</span>
+                                            </p>
+                                            <p class="flex items-start">
+                                                <span class="w-32 text-gray-600">Home:</span>
+                                                <span class="font-medium flex-1">{{$user->home_address ?? 'Not provided'}}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Reference -->
+                                    <div class="mt-4 pt-4 border-t">
+                                        <p class="flex items-center">
+                                            <span class="w-32 text-gray-600">Reference:</span>
+                                            <span class="font-medium">{{$user->ref_name ?? 'Not provided'}}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Personal Information -->
+                            <div class="space-y-4">
+                                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Personal Information</h2>
+                                <div class="space-y-2">
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Mother Name:</span>
+                                        <span class="font-medium">{{$user->mother_name ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Date of Birth:</span>
+                                        <span class="font-medium">{{$user->date_of_birth ? $user->date_of_birth : 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Gender:</span>
+                                        <span class="font-medium">{{$user->gender ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">NID:</span>
+                                        <span class="font-medium">{{$user->nid ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Occupation:</span>
+                                        <span class="font-medium">{{$user->occupation ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Blood Group:</span>
+                                        <span class="font-medium">{{$user->blood_group ?? 'Not provided'}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Account Information -->
+                            <div class="space-y-4">
+                                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Account Information</h2>
+                                <div class="space-y-2">
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Status:</span>
+                                        <span class="font-medium px-3 py-1 rounded-full text-sm {{$user->status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}}">
+                                            {{$user->status ? 'Active' : 'Inactive'}}
+                                        </span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Created:</span>
+                                        <span class="font-medium">{{$user->created_at->format('M d, Y h:i A')}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Last Update:</span>
+                                        <span class="font-medium">{{$user->updated_at->format('M d, Y h:i A')}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Last Login:</span>
+                                        <span class="font-medium">{{$user->last_login_at ?? 'Never logged in'}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    @if ($user->photo)
-                        <img src="{{asset($user->photo)}}" alt="" srcset="" class="w-24">
-                    @endif
-                </div>
-                {{-- user role --}}
-                <div class="grid grid-cols-4 gap-2 mt-4" id="rolediv">
                 </div>
             </div>
-        </div> <!-- end card -->
-
-        <div class="card">
-            <div class="p-6">
-
-                <form action="{{ route('users.update',$user->id) }}" method="post" enctype="multipart/form-data">
-                    <div class="grid lg:grid-cols-2 gap-5">
-                        @csrf
-                        @method('PATCH')
-
-
-                        <div>
-                            <label for="name" class="block mb-2">Name</label>
-                            <input type="text" class="form-input" id="name" name="name" required value="{{$user->name}}">
-                        </div> <!-- end -->
-
-                        <div>
-                            <label for="email" class="block mb-2">Email</label>
-                            <input type="text" class="form-input" id="email" name="email" required="" value="{{$user->email}}">
-                        </div> <!-- end -->
-
-                        <div>
-                            <label class="block text-gray-600 mb-2" for="photo">Profile Picture</label>
-                            <input type="file" id="photo" class="form-input border" name="photo">
-                        </div> <!-- end -->
-
-                        @if ($user->agency)
-                            
-                        <div>
-                            <label class="block text-gray-600 mb-2" for="agent_id">Select Agtent</label>
-                            <select class="form-select" id="agent_id" name="agent_id" required>
-                                @foreach ($agents as $agent)
-                                    <option value="{{ $agent->id }}" @if($agent->id == $user->agency->id) selected @endif>{{ $agent->name }}</option>
-                                @endforeach
-                            </select>
-                        </div> <!-- end -->
-                        @endif
-
-
-                        <div class="lg:col-span-2 mt-3">
-                            <button type="submit"
-                                class="font-mont mt-8 px-10 py-4 bg-black text-white font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 relative after:absolute after:content-['SURE!'] after:flex after:justify-center after:items-center after:text-white after:w-full after:h-full after:z-10 after:top-full after:left-0 after:bg-seagreen overflow-hidden hover:after:top-0 after:transition-all after:duration-300">Update</button>
-                        </div> <!-- end button -->
-
-
-                    </div>
-                </form>
-
-            </div>
-        </div> <!-- end card -->
+        </div>
     </div>
 
 
     <x-slot name="script">
         <script>
-            const rolesContainer = $('#rolediv');
-
-            $(document).ready(function () {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
-                const userid = $('#userid').val();
-                
-                $.ajax({
-                    url: '/users/showuserrole/'+ userid,
-                    method: 'GET',
-                    success: function (response) {
-                        rolesContainer.empty(); // Clear the container
-
-                        // Render user roles
-                        response.userRoles.forEach(function (role) {
-                            rolesContainer.append(`
-                                <span class="inline-flex items-center gap-1.5 py-0.5 text-sm font-medium bg-seagreen text-white px-4 capitalize rounded-full hover:scale-110 cursor-pointer" onClick="roleUnmount('${role.name}',${userid})">
-                                    ${role.name} x
-                                </span>
-                            `);
-                        });
-
-                        // Render roles excluding user roles
-                        response.roles.forEach(function (role) {
-                            let isUserRole = response.userRoles.some(userRole => userRole.id === role.id);
-                            if (!isUserRole) {
-                                rolesContainer.append(`
-                                    <span class="inline-flex items-center gap-1.5 py-0.5 text-sm font-medium bg-red-500 text-white px-4 capitalize rounded-full hover:scale-110 cursor-pointer" onClick="roleMount('${role.name}',${userid});">
-                                        ${role.name} +
-                                    </span>
-                                `);
-                            }
-                        });
-                    },
-                    error: function (error) {
-                        console.log('Error fetching roles:', error);
-                    }
-                });
-            });
-
-
-            // Unassign role
-            function roleUnmount(rolename,userID) {
-                Swal.fire({
-                    title: "Unassign ?",
-                    text: "Are you sure to unassign this role ?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: "Unassign",
-                    background: 'rgba(255, 255, 255, 0.6)',
-                    padding: '20px',
-                    confirmButtonColor: '#0db8a6',
-                }).then((result) => {
-                    if (result.value) {
-                        $.ajax({
-                            method: 'POST',
-                            url: BASE_URL + 'users/unassignrole',
-                            dataType: 'json',
-                            data: {
-                                userid: userID,
-                                rolename: rolename,
-                            },
-                            success: function(response) {
-                                rolesContainer.empty(); // Clear the container
-
-                                // Render user roles
-                                response.userRoles.forEach(function (role) {
-                                    rolesContainer.append(`
-                                        <span class="inline-flex items-center gap-1.5 py-0.5 text-sm font-medium bg-seagreen text-white px-4 capitalize rounded-full hover:scale-110 cursor-pointer" onClick="roleUnmount('${role.name}',${userID})">
-                                            ${role.name} x
-                                        </span>
-                                    `);
-                                });
-
-                                // Render roles excluding user roles
-                                response.roles.forEach(function (role) {
-                                    let isUserRole = response.userRoles.some(userRole => userRole.id === role.id);
-                                    if (!isUserRole) {
-                                        rolesContainer.append(`
-                                            <span class="inline-flex items-center gap-1.5 py-0.5 text-sm font-medium bg-red-500 text-white px-4 capitalize rounded-full hover:scale-110 cursor-pointer" onClick="roleMount('${role.name}',${userID})">
-                                                ${role.name} +
-                                            </span>
-                                        `);
-                                    }
-                                });
-                            },
-                            error: function (error) {
-                                console.log('Error fetching roles:', error);
-                            }
-                        });
-                    }
-                });
-            }
-
-
-            // Assigning role
-            function roleMount(rolename,userID) {
-                Swal.fire({
-                    title: "Assign ?",
-                    text: "Are you sure to assign this role ?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: "Assign",
-                    background: 'rgba(255, 255, 255, 0.6)',
-                    padding: '20px',
-                    confirmButtonColor: '#0db8a6',
-                }).then((result) => {
-                    if (result.value) {
-                        $.ajax({
-                            method: 'POST',
-                            url: BASE_URL + 'users/assignrole',
-                            dataType: 'json',
-                            data: {
-                                userid: userID,
-                                rolename: rolename,
-                            },
-                            success: function(response) {
-                                rolesContainer.empty(); // Clear the container
-
-                                // Render user roles
-                                response.userRoles.forEach(function (role) {
-                                    rolesContainer.append(`
-                                        <span class="inline-flex items-center gap-1.5 py-0.5 text-sm font-medium bg-seagreen text-white px-4 capitalize rounded-full hover:scale-110 cursor-pointer" onClick="roleUnmount('${role.name}',${userID})">
-                                            ${role.name} x
-                                        </span>
-                                    `);
-                                });
-
-                                // Render roles excluding user roles
-                                response.roles.forEach(function (role) {
-                                    let isUserRole = response.userRoles.some(userRole => userRole.id === role.id);
-                                    if (!isUserRole) {
-                                        rolesContainer.append(`
-                                            <span class="inline-flex items-center gap-1.5 py-0.5 text-sm font-medium bg-red-500 text-white px-4 capitalize rounded-full hover:scale-110 cursor-pointer" onClick="roleMount('${role.name}',${userID})">
-                                                ${role.name} +
-                                            </span>
-                                        `);
-                                    }
-                                });
-                            },
-                            error: function (error) {
-                                console.log('Error fetching roles:', error);
-                            }
-                        });
-                    }
-                });
-            }
 
         </script>
     </x-slot>

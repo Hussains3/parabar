@@ -51,20 +51,50 @@ class UserController extends Controller implements HasMiddleware
             DB::beginTransaction();
 
             $user = new User;
-            $user->fill($request->safe()->only(['name', 'email']));
+
+            // Basic Information
+            $user->fill($request->safe()->only([
+                'name',
+                'email',
+                'phone',
+                'staff_id_no',
+                'post',
+                'work_site',
+                'address',
+                'whatsapp'
+            ]));
             $user->password = Hash::make($request->password);
+
+            // Personal Information
+            $user->fill($request->safe()->only([
+                'father_name',
+                'father_mobile',
+                'mother_name',
+                'mother_mobile',
+                'wife_name',
+                'wife_mobile',
+                'date_of_birth',
+                'blood_group',
+                'home_address',
+                'ref_name'
+            ]));
 
             if ($request->agent_id) {
                 $user->agent_id = $request->agent_id;
             }
 
+            // Handle Photo Upload
             if ($request->hasFile('photo')) {
                 $path = $request->file('photo')->store('users/photos', 'public');
                 $user->photo = $path;
             }
 
             $user->save();
-            $user->assignRole($request->role);
+
+            // Assign Role
+            if ($request->role) {
+                $user->assignRole($request->role);
+            }
 
             DB::commit();
             return redirect()->route('users.index')
@@ -77,12 +107,10 @@ class UserController extends Controller implements HasMiddleware
         }
     }
 
-    public function show($id): View
+    public function show(User $user): View
     {
-        $user = User::with('agency')->findOrFail($id);
         $roles = Role::all();
-        $agents = Agent::all();
-        return view('admin.users.show', compact('user', 'roles', 'agents'));
+        return view('admin.users.show', compact('user','roles'));
     }
 
     public function showUserRoles($id)
@@ -97,47 +125,7 @@ class UserController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function assignrole(Request $request)
-    {
-        $request->validate([
-            'userid' => 'required|exists:users,id',
-            'rolename' => 'required|exists:roles,name',
-        ]);
 
-        try {
-            $user = User::findOrFail($request->userid);
-            $user->assignRole($request->rolename);
-
-            return response()->json([
-                'success' => 'Role Assigned',
-                'roles' => Role::all(),
-                'userRoles' => $user->roles,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error assigning role: ' . $e->getMessage()], 500);
-        }
-    }
-
-    public function unassignrole(Request $request)
-    {
-        $request->validate([
-            'userid' => 'required|exists:users,id',
-            'rolename' => 'required|exists:roles,name',
-        ]);
-
-        try {
-            $user = User::findOrFail($request->userid);
-            $user->removeRole($request->rolename);
-
-            return response()->json([
-                'success' => 'Role Unassigned',
-                'roles' => Role::all(),
-                'userRoles' => $user->roles,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error removing role: ' . $e->getMessage()], 500);
-        }
-    }
 
     public function edit($id): View
     {
@@ -153,8 +141,34 @@ class UserController extends Controller implements HasMiddleware
             DB::beginTransaction();
 
             $user = User::findOrFail($id);
-            $user->fill($request->safe()->only(['name', 'email']));
 
+            // Basic Information
+            $user->fill($request->safe()->only([
+                'name',
+                'email',
+                'phone',
+                'staff_id_no',
+                'post',
+                'work_site',
+                'address',
+                'whatsapp'
+            ]));
+
+            // Personal Information
+            $user->fill($request->safe()->only([
+                'father_name',
+                'father_mobile',
+                'mother_name',
+                'mother_mobile',
+                'wife_name',
+                'wife_mobile',
+                'date_of_birth',
+                'blood_group',
+                'home_address',
+                'ref_name'
+            ]));
+
+            // Handle Photo Upload
             if ($request->hasFile('photo')) {
                 if ($user->photo) {
                     Storage::disk('public')->delete($user->photo);
@@ -163,7 +177,18 @@ class UserController extends Controller implements HasMiddleware
                 $user->photo = $path;
             }
 
+            // Handle Password Update
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+
             $user->save();
+
+            // Update Role if provided
+            if ($request->role) {
+                $user->syncRoles([$request->role]);
+            }
+
             DB::commit();
 
             return redirect()->route('users.index')
@@ -196,48 +221,7 @@ class UserController extends Controller implements HasMiddleware
         }
     }
 
-    public function createAgentUser(Request $request)
-    {
 
-        $agents = Agent::all();
-        $roles = Role::where('name', 'agent')->get();
-        return view('admin.users.agentcreate', compact('roles', 'agents'));
-    }
 
-    public function storeAgentUser(Request $request)
-    {
-        try {
-            DB::beginTransaction();
 
-            $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8'],
-                'agent_id' => ['required', 'exists:agents,id'],
-            ]);
-
-            $user = new User;
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->agent_id = $request->agent_id;
-
-            if ($request->hasFile('photo')) {
-                $path = $request->file('photo')->store('users/photos', 'public');
-                $user->photo = $path;
-            }
-
-            $user->save();
-            $user->assignRole('agent');
-
-            DB::commit();
-            return redirect()->route('users.index')
-                ->with(['status' => 200, 'message' => 'Agent user created successfully']);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()
-                ->with(['status' => 500, 'message' => 'Error creating agent user: ' . $e->getMessage()]);
-        }
-    }
 }

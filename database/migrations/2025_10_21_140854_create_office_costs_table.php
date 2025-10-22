@@ -16,12 +16,12 @@ return new class extends Migration
             $table->foreignId('cost_category_id')->constrained()->onDelete('restrict');
             $table->date('cost_date');
             $table->decimal('amount', 10, 2);
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('attachment_path')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->text('notes')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('approved');
             $table->timestamps();
 
             // Add index for frequent queries

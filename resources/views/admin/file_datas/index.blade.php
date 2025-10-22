@@ -12,7 +12,6 @@
     {{-- Page Content --}}
     <div class="flex flex-col gap-4">
 
-        {{-- Table --}}
         <div class="card w-full">
             <div class="p-6">
                 {{-- Table start here --}}

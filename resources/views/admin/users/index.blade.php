@@ -78,7 +78,10 @@
                                 <a href="${BASE_URL}users/${data.id}" class="text-seagreen/70 hover:text-seagreen  hover:scale-105 transition duration-150 ease-in-out text-xl" >
                                     <span class="menu-icon"><i class="mdi mdi-eye"></i></span>
                                 </a>
-                                
+                                <a href="${BASE_URL}users/${data.id}/edit" class="text-seagreen/70 hover:text-seagreen  hover:scale-105 transition duration-150 ease-in-out text-xl" >
+                                    <span class="menu-icon"><i class="mdi mdi-table-edit"></i></span>
+                                </a>
+
                                 <button type="button"  class="text-red-500/70 hover:text-red  hover:scale-105 transition duration-150 ease-in-out text-xl" onclick="userDelete(${data.id});">
                                     <span class="menu-icon"><i class="mdi mdi-delete"></i></span>
                                     </button>

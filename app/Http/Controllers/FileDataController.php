@@ -47,6 +47,61 @@ class FileDataController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function addPayment(Request $request, $id)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
+        ]);
+
+        try {
+            $file_data = File_data::findOrFail($id);
+
+            // Initialize payments array if null
+            $payments = $file_data->payments ?? [];
+
+            // Add new payment
+            $payments[] = [
+                'amount' => $request->amount,
+                'date' => $request->payment_date,
+                'recorded_at' => now(),
+                'recorded_by' => Auth::id(),
+            ];
+
+            // Update payment totals
+            $total_paid = array_sum(array_column($payments, 'amount'));
+            $balance = $file_data->bill_coat_fee - $total_paid;
+
+            // Check if a specific status was provided and isn't 'Auto'
+            if ($request->status != 'Auto') {
+                $payment_status = $request->status;
+            } else {
+                // If status is 'Auto' or not provided, determine status based on financial figures
+                if ($balance <= 0) {
+                    $payment_status = 'Paid';
+                } elseif ($balance > 0 && $total_paid > 0) {
+                    $payment_status = 'Partial';
+                } else {
+                    // This is the default case for 'Auto' when balance > 0 and total_paid == 0
+                    $payment_status = 'Unpaid';
+                }
+            }
+
+
+            // Update file_data
+            $file_data->payments = $payments;
+            $file_data->total_paid = $total_paid;
+            $file_data->balance = $balance;
+            $file_data->status = $payment_status;
+            // Save all changes
+            $file_data->save();
+
+            return redirect()->back()->with('success', 'Payment recorded successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error recording payment: ' . $e->getMessage());
+        }
+    }
+
     public function create(Request $request)
     {
         $ie_datas = Ie_data::select('id', 'org_name')->orderBy('org_name')->get();
@@ -313,8 +368,9 @@ class FileDataController extends Controller
             $file_data->bill_file_commission = $request->bill_file_commission;
             $file_data->bill_other_cost = $request->bill_other_cost;
             $file_data->bill_total = $request->bill_total;
-            $file_data->status = $request->status ?? 'Paid';
+            $file_data->balance = $request->bill_total - $request->total_paid;
 
+            $file_data->status = $request->status;
             // Save all changes
             $file_data->save();
 

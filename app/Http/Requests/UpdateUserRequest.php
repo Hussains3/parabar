@@ -16,7 +16,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($this->route('id'))],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($this->route('user'))],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'agent_id' => ['nullable', 'exists:agents,id']
         ];

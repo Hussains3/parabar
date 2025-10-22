@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\File_data;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+use Carbon\Carbon;
 
 class FileDataSeeder extends Seeder
 {
@@ -16,48 +17,105 @@ class FileDataSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        
-        // Set date range from start of 2025 to today
-        $startDate = '2025-01-01';
-        $endDate = '2025-05-08'; // Today's date
 
-        $ieDataIds = DB::table('ie_datas')->pluck('id')->toArray();// Get all existing IDs from the ie_datas table
-        $agentIds = DB::table('agents')->pluck('id')->toArray();// Get all existing IDs from the agents table
-        $operatorIds = DB::table('model_has_roles')
-            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where('roles.name', 'operator')
-            ->pluck('model_has_roles.model_id')
-            ->toArray(); // Get IDs of users with operator role
-
-        for ($i = 0; $i < 1000; $i++) {
-            $createdAt = $faker->dateTimeBetween($startDate, $endDate);
-            
-            DB::table('file_datas')->insert([
-                'lodgement_no' => $faker->randomNumber(4, true), // 4-digit number
-                'lodgement_date' => $faker->dateTimeBetween($startDate, $endDate)->format('Y-m-d'), // Random date
-                'manifest_no' => $faker->randomNumber(4, true), // 4-digit number
-                'manifest_date' => $faker->dateTimeBetween($startDate, $endDate)->format('Y-m-d'), // Random date
-                'group' => null, // Random word
-                'ie_type' => null, // Random type
-                'ie_group' => null,
-                'goods_name' => null,
-                'goods_type' => null,
-                'be_number' => $faker->randomNumber(6, true), // 6-digit number
-                'be_date' => $faker->dateTimeBetween($startDate, $endDate)->format('Y-m-d'),
-                'fees' => $faker->randomFloat(2, 100, 10000), // Random float between 100 - 10000
-                'page' => $faker->randomDigitNotNull(),
-                'no_of_items' => $faker->numberBetween(1, 100),
-                'status' => $faker->randomElement(['Received', 'Delivered','Printed']), // Random status
-                'ie_data_id' => $faker->randomElement($ieDataIds), // Select a random ID from ie_datas
-                'agent_id' => $faker->randomElement($agentIds),
-                'reciver_id' => 12,
-                'operator_id' => $faker->randomElement($operatorIds),
-                'deliverer_id' => $faker->randomElement($operatorIds),
-                'delivered_at' => null,
-                'created_at' => $createdAt,
-                'updated_at' => $createdAt,
-            ]);
+        // Get IE data IDs for foreign key relationship
+        $ieDataIds = DB::table('ie_datas')->pluck('id')->toArray();
+        if (empty($ieDataIds)) {
+            throw new \Exception('No IE data records found. Please seed IE data first.');
         }
 
+        // Generate dates from 2022 to today
+        $startDate = Carbon::createFromDate(2022, 1, 1);
+        $endDate = Carbon::today();
+
+        // Generate 1000 records
+        for ($i = 0; $i < 100; $i++) {
+            // Generate a random date between start and end date
+            $randomDate = Carbon::createFromTimestamp(
+                rand($startDate->timestamp, $endDate->timestamp)
+            );
+
+            // Format date as d/m/Y for the mutator
+            $fileDate = $randomDate->format('d/m/Y');
+
+            // Calculate realistic fees
+            $actualCoatFee = $faker->numberBetween(5000, 15000);
+            $billCoatFee = $actualCoatFee + $faker->numberBetween(1000, 3000);
+
+            // Generate payment data
+            $totalPaid = $faker->numberBetween(0, $billCoatFee);
+            $balance = $billCoatFee - $totalPaid;
+
+            // Create payments array if there's any payment
+            $payments = [];
+            if ($totalPaid > 0) {
+                $remainingAmount = $totalPaid;
+                $numPayments = $faker->numberBetween(1, 3);
+
+                for ($j = 0; $j < $numPayments; $j++) {
+                    if ($j == $numPayments - 1) {
+                        $amount = $remainingAmount;
+                    } else {
+                        $amount = $faker->numberBetween(1000, $remainingAmount - 1000);
+                        $remainingAmount -= $amount;
+                    }
+
+                    $payments[] = [
+                        'amount' => $amount,
+                        'date' => $randomDate->addDays($faker->numberBetween(1, 30))->format('Y-m-d'),
+                        'note' => $faker->randomElement(['Cash payment', 'Bank transfer', 'Check payment'])
+                    ];
+                }
+            }
+
+            File_data::create([
+                'be_number' => 'BE' . $faker->unique()->numberBetween(10000, 99999),
+                'manifest_number' => 'MN' . $faker->numberBetween(1000, 9999),
+                'package' => $faker->numberBetween(1, 100),
+                'file_date' => $fileDate,
+                'lc_no' => 'LC' . $faker->numberBetween(100000, 999999),
+                'lc_value' => $faker->numberBetween(100000, 1000000),
+                'lc_bank' => $faker->randomElement(['Sonali Bank', 'Janata Bank', 'Agrani Bank', 'Rupali Bank', 'DBBL', 'BRAC Bank']),
+                'bill_no' => 'BILL' . $faker->numberBetween(1000, 9999),
+                'actual_coat_fee' => $actualCoatFee,
+                'bill_coat_fee' => $billCoatFee,
+                'actual_asso_be_entry_fee' => $faker->numberBetween(500, 1500),
+                'bill_asso_be_entry_fee' => $faker->numberBetween(1500, 2500),
+                'actual_cargo_branch_aro' => $faker->numberBetween(200, 800),
+                'bill_cargo_branch_aro' => $faker->numberBetween(800, 1500),
+                'actual_cargo_branch_ro' => $faker->numberBetween(200, 800),
+                'bill_cargo_branch_ro' => $faker->numberBetween(800, 1500),
+                'actual_cargo_branch_ac' => $faker->numberBetween(200, 800),
+                'bill_cargo_branch_ac' => $faker->numberBetween(800, 1500),
+                'actual_manifest_dept' => $faker->numberBetween(300, 1000),
+                'bill_manifest_dept' => $faker->numberBetween(1000, 2000),
+                'actual_fourtytwo_shed_aro' => $faker->numberBetween(300, 1000),
+                'bill_fourtytwo_shed_aro' => $faker->numberBetween(1000, 2000),
+                'actual_examination_normal' => $faker->numberBetween(500, 1500),
+                'actual_examination_irm' => $faker->numberBetween(500, 1500),
+                'actual_examination_goinda' => $faker->numberBetween(500, 1500),
+                'bill_examination_normal' => $faker->numberBetween(1500, 2500),
+                'bill_examination_irm' => $faker->numberBetween(1500, 2500),
+                'bill_examination_goinda' => $faker->numberBetween(1500, 2500),
+                'actual_assessement_aro' => $faker->numberBetween(200, 800),
+                'actual_assessement_ro' => $faker->numberBetween(200, 800),
+                'actual_assessement_ac' => $faker->numberBetween(200, 800),
+                'actual_assessement_dc' => $faker->numberBetween(200, 800),
+                'actual_assessement_jc' => $faker->numberBetween(200, 800),
+                'actual_assessement_adc' => $faker->numberBetween(200, 800),
+                'actual_assessement_commissionar' => $faker->numberBetween(200, 800),
+                'bill_assessement_aro' => $faker->numberBetween(800, 1500),
+                'bill_assessement_ro' => $faker->numberBetween(800, 1500),
+                'bill_assessement_ac' => $faker->numberBetween(800, 1500),
+                'bill_assessement_dc' => $faker->numberBetween(800, 1500),
+                'bill_assessement_jc' => $faker->numberBetween(800, 1500),
+                'bill_assessement_adc' => $faker->numberBetween(800, 1500),
+                'bill_assessement_commissionar' => $faker->numberBetween(800, 1500),
+                'ie_data_id' => $faker->randomElement($ieDataIds),
+                'total_paid' => $totalPaid,
+                'payments' => $payments,
+                'balance' => $balance,
+            ]);
+        }
     }
 }

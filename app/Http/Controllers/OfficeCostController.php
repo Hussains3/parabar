@@ -14,6 +14,47 @@ use Illuminate\Support\Facades\Storage;
 class OfficeCostController extends Controller
 {
     /**
+     * Generate monthly report
+     */
+    public function monthlyReport(Request $request)
+    {
+        $year = $request->input('year', Carbon::now()->year);
+
+        // Get monthly costs
+        $monthlyCosts = OfficeCost::selectRaw('MONTH(cost_date) as month, SUM(amount) as total_cost')
+            ->whereYear('cost_date', $year)
+            ->groupBy('month')
+            ->pluck('total_cost', 'month')
+            ->toArray();
+
+        // Get monthly bills from file_datas
+        $monthlyBills = DB::table('file_datas')
+            ->selectRaw('MONTH(file_date) as month, SUM(total_paid - actual_total) as total_bill')
+            ->where('status', 'paid')
+            ->whereYear('file_date', $year)
+            ->groupBy('month')
+            ->pluck('total_bill', 'month')
+            ->toArray();
+
+        $report = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $cost = $monthlyCosts[$month] ?? 0;
+            $bill = $monthlyBills[$month] ?? 0;
+            $profit = $bill - $cost;
+
+            $report[] = [
+                'serial_no' => $month,
+                'month' => Carbon::create()->month($month)->format('F'),
+                'cost' => number_format($cost, 2),
+                'total_bill' => number_format($bill, 2),
+                'profit' => number_format($profit, 2)
+            ];
+        }
+
+        return view('admin.office_costs.monthly_report', compact('report', 'year'));
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
@@ -61,15 +102,14 @@ class OfficeCostController extends Controller
             'cost_category_id' => 'required|exists:cost_categories,id',
             'cost_date' => 'required|date',
             'amount' => 'required|numeric|min:0',
-            'description' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
-            'attachment' => 'nullable|file|max:2048|mimes:pdf,jpg,jpeg,png'
         ]);
 
         DB::beginTransaction();
         try {
             $officeCost = new OfficeCost($validated);
-            $officeCost->status = 'pending';
+            $officeCost->status = 'approved';
             $officeCost->created_by = Auth::id();
 
             if ($request->hasFile('attachment')) {
@@ -80,7 +120,7 @@ class OfficeCostController extends Controller
             $officeCost->save();
             DB::commit();
 
-            return redirect()->route('office-costs.index')
+            return redirect()->route('office-costs.dailycost')
                 ->with('success', 'Office cost created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -250,5 +290,23 @@ class OfficeCostController extends Controller
         $categories = CostCategory::where('is_active', true)->get();
 
         return view('admin.office_costs.report', compact('summary', 'totalAmount', 'categories', 'monthlyTrends'));
+    }
+
+
+    public function dailyCost(Request $request)
+    {
+        $date = $request->input('date', Carbon::now()->toDateString());
+
+        $dailyCosts = OfficeCost::with('category')
+            ->whereDate('cost_date', $date)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalAmount = $dailyCosts->sum('amount');
+        $categories = CostCategory::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.office_costs.daily', compact('categories','dailyCosts', 'totalAmount', 'date'));
     }
 }

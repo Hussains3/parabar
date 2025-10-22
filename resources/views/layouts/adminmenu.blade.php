@@ -81,6 +81,11 @@
 
                 <ul class="sub-menu hidden">
                     <li class="menu-item">
+                        <a href="{{route('file_datas.index')}}" class="menu-link">
+                            <span class="menu-text">All Files</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
                         <a href="{{route('file_datas.dueindex')}}" class="menu-link">
                             <span class="menu-text">Due Files</span>
                         </a>
@@ -103,18 +108,23 @@
                 </a>
                 <ul class="sub-menu hidden">
                     <li class="menu-item">
+                        <a href="{{route('office-costs.dailycost')}}" class="menu-link">
+                            <span class="menu-text">Daily Cost</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
                         <a href="{{route('cost-categories.index')}}" class="menu-link">
                             <span class="menu-text">Cost Categories</span>
                         </a>
                     </li>
                     <li class="menu-item">
                         <a href="{{route('office-costs.index')}}" class="menu-link">
-                            <span class="menu-text">Office Costs</span>
+                            <span class="menu-text">All Costs</span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{route('office-costs.report')}}" class="menu-link">
-                            <span class="menu-text">Costs Report</span>
+                        <a href="{{route('office-costs.monthly-report')}}" class="menu-link">
+                            <span class="menu-text">Account</span>
                         </a>
                     </li>
                 </ul>

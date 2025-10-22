@@ -331,6 +331,12 @@
                                             <input type="number" name="bill_total" id="bill_total" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
                                         </td>
                                     </tr>
+                                    <tr class="bg-gray-50 font-semibold">
+                                        <td class="border border-gray-700 px-4 py-2" colspan="3">Total Paid</td>
+                                        <td class="border border-gray-700 px-4 py-2 text-right">
+                                            <input type="number" name="total_paid" id="total_paid" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -430,7 +436,7 @@
             // Calculate total cost
             function calculateTotal() {
                 let total = 0.00;
-                $('#fileReciveForm input[type="number"]').not('#bill_total,#lc_value').each(function() {
+                $('#fileReciveForm input[type="number"]').not('#bill_total,#lc_value,#total_paid').each(function() {
                     const value = parseFloat($(this).val()) || 0.00;
                     total += value;
                 });

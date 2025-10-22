@@ -24,7 +24,7 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <!-- Frost UI -->
-        <script src="https://unpkg.com/@agencyhive/frost-ui@1.0.0/dist/frost.min.js"></script>
+        <script src="https://unpkg.com/@frostui/tailwindcss/dist/frostui.js"></script>
 
         {{-- Custom css --}}
         <link rel="stylesheet" href="{{asset('css/custom.css')}}">
