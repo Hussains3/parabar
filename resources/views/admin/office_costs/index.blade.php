@@ -68,7 +68,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($officeCosts as $cost)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $cost->cost_date->format('d/m/Y') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $cost->cost_date}}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $cost->category->name }}</td>
                             <td class="px-6 py-4">{{ $cost->description }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ number_format($cost->amount, 2) }}</td>
