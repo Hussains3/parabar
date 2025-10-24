@@ -1,6 +1,6 @@
 <x-app-layout>
     {{-- Title --}}
-    <x-slot name="title">Users</x-slot>
+    <x-slot name="title">Staffs</x-slot>
 
 
     {{-- Header Style --}}
@@ -13,6 +13,14 @@
     <div class="flex flex-col gap-6">
         <div class="card">
             <div class="p-6">
+                <div class="">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-semibold text-gray-900">Staffs</h1>
+                        <a href="{{ route('users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Add New Staff
+                        </a>
+                    </div>
+                </div>
                 <table id="userTable" class="display stripe text-xs sm:text-base" style="width:100%">
                     <thead>
                         <tr>

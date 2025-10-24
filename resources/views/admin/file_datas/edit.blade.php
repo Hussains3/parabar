@@ -93,19 +93,19 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <div class="">
-                                    <input type="radio" name="status" id="auto" checked>
+                                    <input type="radio" name="status" id="auto" value="Auto" checked>
                                     <label for="auto">Auto</label>
                                 </div>
                                 <div class="">
-                                    <input type="radio" name="status" id="unpaid">
+                                    <input type="radio" name="status" id="unpaid" value="Unpaid">
                                     <label for="unpaid">Unpaid</label>
                                 </div>
                                 <div class="">
-                                    <input type="radio" name="status" id="partial">
+                                    <input type="radio" name="status" id="partial" value="Partial">
                                     <label for="partial">Partial</label>
                                 </div>
                                 <div class="">
-                                    <input type="radio" name="status" id="paid">
+                                    <input type="radio" name="status" id="paid" value="Paid">
                                     <label for="paid">Paid</label>
                                 </div>
                             </div>

@@ -14,11 +14,14 @@
             <div class="p-6">
                 {{--  --}}
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="mb-4 text-xl">Daily Costs ({{$date}})</h1>
+                    <div class="mb-4">
+                        <h1 class="text-xl">Daily cost <span class="text-md">({{$totalAmount."Taka"}})</span></h1>
+                        <p class="text-seagreen">{{$date}}</p>
+                    </div>
                     <form action="{{ route('office-costs.dailycost') }}" method="GET" class="flex justify-center items-center gap-4">
                         <div class="flex justify-start items-center gap-4">
                             <label for="start_date" class="block ">Start Date</label>
-                            <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}"
+                            <input type="date" name="start_date" id="start_date" value="{{$date}}"
                                 class="mform-input">
                         </div>
 
@@ -36,6 +39,7 @@
                         <thead class="">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Sirial Number</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Date</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Description</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Amount</th>
@@ -45,6 +49,7 @@
                             @foreach ($dailyCosts as $cost)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $loop->index+1 }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $cost->cost_date }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $cost->category->name }}</td>
                                     <td class="px-6 py-4">{{ $cost->description }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ number_format($cost->amount, 2) }}</td>
@@ -54,8 +59,11 @@
                                 <td></td>
                                 <td >
                                     <div class="flex justify-between items-center">
-
-                                        <label for="initial_cost_category_id" class="block">Category</label>
+                                        <input type="text" name="cost_date" id="cost_date" value="{{$date}}" class="form-input" disabled>
+                                    </div>
+                                </td>
+                                <td >
+                                    <div class="flex justify-between items-center">
                                         <select name="initial_cost_category_id" id="initial_cost_category_id" required
                                             class="form-select">
                                             <option value="">Select Category</option>
@@ -69,8 +77,6 @@
                                 </td>
                                 <td>
                                     <div class="flex justify-between items-center">
-
-                                        <label for="initial_description" class="block text-sm font-medium text-gray-700">Description</label>
                                         <input type="text" name="initial_description" id="initial_description" class="form-input">
                                     </div>
 
@@ -79,11 +85,9 @@
                                     <div class="flex justify-between items-center">
 
                                         <div class="flex justify-between items-center">
-
-                                            <label for="initial_amount" class="block text-sm font-medium text-gray-700">Amount</label>
                                             <input type="number" name="initial_amount" id="initial_amount" step="0.01" min="0" required  class="form-input">
                                         </div>
-                                        <button type="submit" class="block text-center px-4 py-0.5 bg-gradient-to-r from-violet-400 to-purple-300 rounded-md shadow-md hover:shadow-lg hover:scale-105 duration-150 transition-all font-bold text-lg text-white"
+                                        <button type="submit" class="block text-center px-2 py-0.5 bg-gradient-to-r from-violet-400 to-purple-300 rounded-md shadow-md hover:shadow-lg hover:scale-105 duration-150 transition-all font-bold text-lg text-white"
                                             id="formsubmitbtn">Add</button>
                                     </div>
                                 </td>

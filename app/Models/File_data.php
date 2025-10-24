@@ -87,34 +87,6 @@ class File_data extends Model
         $this->attributes['file_date'] = $value ? Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d') : null;
     }
 
-    // Accessor: Converts Y-m-d to d/m/Y when retrieving manifest_date
-    public function getManifestDateAttribute($value)
-    {
-        return $value ? Carbon::parse($value)->format('d/m/Y') : null;
-    }
-
-    // Mutator: Converts d/m/Y to Y-m-d before saving manifest_date
-    public function setManifestDateAttribute($value)
-    {
-        $this->attributes['manifest_date'] = $value ? Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d') : null;
-    }
-
-    // Accessor: Converts Y-m-d to d/m/Y when retrieving be_date
-    public function getBeDateAttribute($value)
-    {
-        return $value ? Carbon::parse($value)->format('d/m/Y') : null;
-    }
-
-    // Mutator: Converts d/m/Y to Y-m-d before saving be_date
-    public function setBeDateAttribute($value)
-    {
-        $this->attributes['be_date'] = $value ? Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d') : null;
-    }
-
-    public function agent()
-    {
-        return $this->belongsTo(Agent::class);
-    }
 
     public function ie_data()
     {

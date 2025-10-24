@@ -100,22 +100,28 @@ class OfficeCostController extends Controller
     {
         $validated = $request->validate([
             'cost_category_id' => 'required|exists:cost_categories,id',
-            'cost_date' => 'required|date',
+            'cost_date' => 'date|string',
             'amount' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
         ]);
 
+
+
+        // return $request;
+
         DB::beginTransaction();
         try {
-            $officeCost = new OfficeCost($validated);
+            $officeCost = new OfficeCost;
+
+            $officeCost->cost_category_id = $request->cost_category_id;
+            $officeCost->cost_date = $request->cost_date;
+            $officeCost->amount = $request->amount;
+            $officeCost->description = $request->description;
+            $officeCost->notes = $request->notes;
+
             $officeCost->status = 'approved';
             $officeCost->created_by = Auth::id();
-
-            if ($request->hasFile('attachment')) {
-                $path = $request->file('attachment')->store('office-costs', 'public');
-                $officeCost->attachment_path = $path;
-            }
 
             $officeCost->save();
             DB::commit();
@@ -295,7 +301,7 @@ class OfficeCostController extends Controller
 
     public function dailyCost(Request $request)
     {
-        $date = $request->input('date', Carbon::now()->toDateString());
+        $date = $request->input('start_date', Carbon::now()->toDateString());
 
         $dailyCosts = OfficeCost::with('category')
             ->whereDate('cost_date', $date)

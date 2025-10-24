@@ -88,6 +88,7 @@ class FileDataController extends Controller
             }
 
 
+
             // Update file_data
             $file_data->payments = $payments;
             $file_data->total_paid = $total_paid;
@@ -214,6 +215,17 @@ class FileDataController extends Controller
     public function update(UpdateFile_dataRequest $request, File_data $file_data)
     {
         try {
+
+            $file_data->ie_data_id = $request->ie_data_id;
+            $file_data->be_number = $request->be_number;
+            $file_data->manifest_number = $request->manifest_number;
+            $file_data->package = $request->package;
+            $file_data->file_date = $request->file_date;
+            $file_data->lc_no = $request->lc_no;
+            $file_data->lc_value = $request->lc_value;
+            $file_data->lc_bank = $request->lc_bank;
+            $file_data->bill_no = $request->bill_no;
+
             // Bill values
             $file_data->bill_coat_fee = $request->bill_coat_fee;
             $file_data->bill_asso_be_entry_fee = $request->bill_asso_be_entry_fee;
@@ -335,6 +347,7 @@ class FileDataController extends Controller
     public function updateprint(Request $request, File_data $file_data)
     {
         try {
+
             // Update all bill-related fields from form
             $file_data->bill_coat_fee = $request->bill_coat_fee;
             $file_data->bill_asso_be_entry_fee = $request->bill_asso_be_entry_fee;

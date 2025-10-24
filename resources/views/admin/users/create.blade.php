@@ -1,6 +1,6 @@
 <x-app-layout>
     {{-- Title --}}
-    <x-slot name="title">Create User</x-slot>
+    <x-slot name="title">Create Staff</x-slot>
     {{-- Page Content --}}
         {{-- Page Content --}}
     <div class="flex flex-col gap-6">

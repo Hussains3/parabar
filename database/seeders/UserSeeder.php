@@ -34,6 +34,7 @@ class UserSeeder extends Seeder
         // $faker = Faker::create();
         // $staffRole = Role::where('name', 'staff')->first();
 
+        
         // if ($staffRole) {
         //     for ($i = 1; $i <= 20; $i++) {
         //         $user = User::create([
