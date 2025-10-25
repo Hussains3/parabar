@@ -24,9 +24,6 @@ class FileDataController extends Controller
         $file_datas = File_data::with('ie_data')->orderBy('status', 'DESC')->limit(1000)->get();
         return view('admin.file_datas.index', compact('file_datas'));
     }
-
-
-
     /**
      * Display a listing of the resource.
      */
@@ -43,7 +40,6 @@ class FileDataController extends Controller
         $file_datas = File_data::with('ie_data')->where('status', 'Paid')->get();
         return view('admin.file_datas.paidindex', compact('file_datas'));
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -70,12 +66,10 @@ class FileDataController extends Controller
 
             // Update payment totals
             $total_paid = array_sum(array_column($payments, 'amount'));
-            $balance = $file_data->bill_coat_fee - $total_paid;
+            $balance = $file_data->bill_total - $total_paid;
 
             // Check if a specific status was provided and isn't 'Auto'
-            if ($request->status != 'Auto') {
-                $payment_status = $request->status;
-            } else {
+            if ($request->status == 'Auto') {
                 // If status is 'Auto' or not provided, determine status based on financial figures
                 if ($balance <= 0) {
                     $payment_status = 'Paid';
@@ -85,6 +79,8 @@ class FileDataController extends Controller
                     // This is the default case for 'Auto' when balance > 0 and total_paid == 0
                     $payment_status = 'Unpaid';
                 }
+            } else {
+                $payment_status = $request->status;
             }
 
 
@@ -102,7 +98,6 @@ class FileDataController extends Controller
             return redirect()->back()->with('error', 'Error recording payment: ' . $e->getMessage());
         }
     }
-
     public function create(Request $request)
     {
         $ie_datas = Ie_data::select('id', 'org_name')->orderBy('org_name')->get();
@@ -382,8 +377,16 @@ class FileDataController extends Controller
             $file_data->bill_other_cost = $request->bill_other_cost;
             $file_data->bill_total = $request->bill_total;
             $file_data->balance = $request->bill_total - $request->total_paid;
+            $file_data->total_paid = $request->total_paid;
 
-            $file_data->status = $request->status;
+            // Update status if totalpaid covers bill total
+            if ($file_data->balance <= 0) {
+                $file_data->status = 'Paid';
+            } elseif ($file_data->balance > 0 && $request->total_paid > 0) {
+                $file_data->status = 'Partial';
+            } else {
+                $file_data->status = 'Unpaid';
+            }
             // Save all changes
             $file_data->save();
 

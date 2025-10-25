@@ -83,10 +83,14 @@ class UserController extends Controller implements HasMiddleware
                 $user->agent_id = $request->agent_id;
             }
 
-            // Handle Photo Upload
+
+
             if ($request->hasFile('photo')) {
-                $path = $request->file('photo')->store('users/photos', 'public');
-                $user->photo = $path;
+                $image = $request->photo;
+                $ext = $image->getClientOriginalExtension();
+                $filename = uniqid() . '.' . $ext;
+                $request->photo->move(public_path('staffimages'), $filename);
+                $user->photo = 'staffimages/'.$filename;
             }
 
             $user->save();
@@ -168,13 +172,13 @@ class UserController extends Controller implements HasMiddleware
                 'ref_name'
             ]));
 
-            // Handle Photo Upload
             if ($request->hasFile('photo')) {
-                if ($user->photo) {
-                    Storage::disk('public')->delete($user->photo);
-                }
-                $path = $request->file('photo')->store('users/photos', 'public');
-                $user->photo = $path;
+                $image = $request->photo;
+                $ext = $image->getClientOriginalExtension();
+                $filename = uniqid() . '.' . $ext;
+                Storage::delete("staffimages/{$user->image}");
+                $request->photo->move(public_path('staffimages'), $filename);
+                $user->photo = 'staffimages/'.$filename;
             }
 
             // Handle Password Update
@@ -207,8 +211,9 @@ class UserController extends Controller implements HasMiddleware
             DB::beginTransaction();
             $user = User::findOrFail($id);
 
+            // Delete old photo
             if ($user->photo) {
-                Storage::disk('public')->delete($user->photo);
+                unlink($user->photo);
             }
 
             $user->delete();

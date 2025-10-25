@@ -84,7 +84,7 @@
                             </div> <!-- end -->
                             <div class="">
                                 <label for="lc_value" class="block mb-2">LC Value</label>
-                                <input type="number" class="form-input" id="lc_value" name="lc_value" required>
+                                <input type="number" class="form-input" id="lc_value" name="lc_value" step="0.01" required>
 
                             </div> <!-- end -->
                             <div class="col-span-2">

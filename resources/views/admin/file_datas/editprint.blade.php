@@ -334,7 +334,7 @@
                                     <tr class="bg-gray-50 font-semibold">
                                         <td class="border border-gray-700 px-4 py-2" colspan="3">Total Paid</td>
                                         <td class="border border-gray-700 px-4 py-2 text-right">
-                                            <input type="number" name="total_paid" id="total_paid" value="{{$file_data->total_paid > 0 ? $file_data->total_paid  : 0 }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
+                                            <input type="number" name="total_paid" id="total_paid" value="{{$file_data->total_paid ?? 0 }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
                                         </td>
                                     </tr>
                                 </tbody>
@@ -345,7 +345,6 @@
 
 
                         <div class="self-end col-span-2 flex justify-end">
-                            <input type="hidden" name="status" value="Paid">
                             <input type="submit" value="Save & Print"
                                 class="font-mont print:hidden px-10 py-4 bg-cyan-600 text-white font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 hover:scale-110"
                                 id="baccountSaveBtn">
