@@ -80,13 +80,16 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                {{-- <a href="{{ route('office-costs.show', $cost) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a> --}}
-                                <a href="{{ route('office-costs.edit', $cost) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                <form class="inline" method="POST" action="{{ route('office-costs.destroy', $cost) }}"
-                                    onsubmit="return confirm('Are you sure you want to delete this cost?');">
+                                <a href="{{ route('office-costs.edit', $cost) }}"
+                                class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+
+                                <form method="POST" action="{{ route('office-costs.destroy', $cost) }}" class="inline"
+                                    onsubmit="const btn = this.querySelector('button'); btn.disabled = true; btn.innerText = 'Deleting...'; return confirm('Are you sure you want to delete this cost?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none cursor-pointer font-medium">
+                                        Delete
+                                    </button>
                                 </form>
                             </td>
                         </tr>

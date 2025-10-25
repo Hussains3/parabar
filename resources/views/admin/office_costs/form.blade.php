@@ -40,7 +40,7 @@
                             <div>
                                 <label for="cost_date" class="block text-sm font-medium text-gray-700">Cost Date</label>
                                 <input type="date" name="cost_date" id="cost_date" required
-                                    value="{{ old('cost_date', isset($officeCost) ? $officeCost->cost_date->format('Y-m-d') : '') }}"
+                                    value="{{ \Carbon\Carbon::createFromFormat('d/m/Y', $officeCost->cost_date)->format('Y-m-d') }}"
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 @error('cost_date')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -61,7 +61,7 @@
                             {{-- Description --}}
                             <div class="col-span-2">
                                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                                <input type="text" name="description" id="description" required
+                                <input type="text" name="description" id="description"
                                     value="{{ old('description', $officeCost->description ?? '') }}"
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 @error('description')
