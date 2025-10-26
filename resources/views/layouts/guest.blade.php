@@ -5,7 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Benapole C&F Asso.</title>
+        <title>@if (isset($title)) {{ $title }} @endif | Parabar Shipping</title>
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{{asset('parabarfac.png')}}">
+
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
