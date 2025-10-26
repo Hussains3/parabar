@@ -103,9 +103,9 @@
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Serial No</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Month</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Cost</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Total Bill</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Profit</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Office Cost</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">File Profit</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider"> Total Profit</th>
                         </tr>
                     </thead>
                     <tbody class=" divide-y">
