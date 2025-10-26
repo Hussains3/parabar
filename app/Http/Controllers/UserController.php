@@ -51,39 +51,25 @@ class UserController extends Controller implements HasMiddleware
             DB::beginTransaction();
 
             $user = new User;
-
-            // Basic Information
-            $user->fill($request->safe()->only([
-                'name',
-                'email',
-                'phone',
-                'staff_id_no',
-                'post',
-                'work_site',
-                'address',
-                'whatsapp'
-            ]));
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->staff_id_no = $request->staff_id_no;
+            $user->post = $request->post;
+            $user->work_site = $request->work_site;
+            $user->address = $request->address;
+            $user->whatsapp = $request->whatsapp;
             $user->password = Hash::make($request->password);
-
-            // Personal Information
-            $user->fill($request->safe()->only([
-                'father_name',
-                'father_mobile',
-                'mother_name',
-                'mother_mobile',
-                'wife_name',
-                'wife_mobile',
-                'date_of_birth',
-                'blood_group',
-                'home_address',
-                'ref_name'
-            ]));
-
-            if ($request->agent_id) {
-                $user->agent_id = $request->agent_id;
-            }
-
-
+            $user->father_name = $request->father_name;
+            $user->father_mobile = $request->father_mobile;
+            $user->mother_name = $request->mother_name;
+            $user->mother_mobile = $request->mother_mobile;
+            $user->wife_name = $request->wife_name;
+            $user->wife_mobile = $request->wife_mobile;
+            $user->date_of_birth = $request->date_of_birth;
+            $user->blood_group = $request->blood_group;
+            $user->home_address = $request->home_address;
+            $user->ref_name = $request->ref_name;
 
             if ($request->hasFile('photo')) {
                 $image = $request->photo;
@@ -146,32 +132,25 @@ class UserController extends Controller implements HasMiddleware
 
             $user = User::findOrFail($id);
 
-            // Basic Information
-            $user->fill($request->safe()->only([
-                'name',
-                'email',
-                'phone',
-                'staff_id_no',
-                'post',
-                'work_site',
-                'address',
-                'whatsapp'
-            ]));
-
-            // Personal Information
-            $user->fill($request->safe()->only([
-                'father_name',
-                'father_mobile',
-                'mother_name',
-                'mother_mobile',
-                'wife_name',
-                'wife_mobile',
-                'date_of_birth',
-                'blood_group',
-                'home_address',
-                'ref_name'
-            ]));
-
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->staff_id_no = $request->staff_id_no;
+            $user->post = $request->post;
+            $user->work_site = $request->work_site;
+            $user->address = $request->address;
+            $user->whatsapp = $request->whatsapp;
+            $user->password = Hash::make($request->password);
+            $user->father_name = $request->father_name;
+            $user->father_mobile = $request->father_mobile;
+            $user->mother_name = $request->mother_name;
+            $user->mother_mobile = $request->mother_mobile;
+            $user->wife_name = $request->wife_name;
+            $user->wife_mobile = $request->wife_mobile;
+            $user->date_of_birth = $request->date_of_birth;
+            $user->blood_group = $request->blood_group;
+            $user->home_address = $request->home_address;
+            $user->ref_name = $request->ref_name;
             if ($request->hasFile('photo')) {
                 $image = $request->photo;
                 $ext = $image->getClientOriginalExtension();
@@ -195,7 +174,7 @@ class UserController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->route('users.index')
+            return redirect()->route('users.show', $user)
                 ->with(['status' => 200, 'message' => 'User updated successfully']);
 
         } catch (\Exception $e) {

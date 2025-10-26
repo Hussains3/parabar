@@ -14,22 +14,27 @@
             <div class="p-6">
                 <div class="flex justify-between items-start">
                     <div class="flex-grow">
-                        <div class="flex items-center gap-4 mb-6">
-                            @if ($user->photo)
-                                <img src="{{asset($user->photo)}}" alt="{{$user->name}}'s photo" class="w-24 h-24 rounded-full object-cover border-4 border-seagreen">
-                            @else
-                                <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                                    <span class="text-3xl text-gray-500">{{strtoupper(substr($user->name, 0, 1))}}</span>
-                                </div>
-                            @endif
-                            <div>
-                                <h1 class="text-3xl font-bold text-gray-800">{{$user->name}}</h1>
-                                <div class="flex gap-2 mt-2">
-                                    @foreach ($user->roles as $role)
-                                        <span class="px-3 py-1 text-sm font-semibold bg-seagreen text-white rounded-full">{{$role->name}}</span>
-                                    @endforeach
+                        <div class="flex justify-between items-center">
+
+                            <div class="flex items-center gap-4 mb-6">
+                                @if ($user->photo)
+                                    <img src="{{asset($user->photo)}}" alt="{{$user->name}}'s photo" class="w-24 h-24 rounded-full object-cover border-4 border-seagreen">
+                                @else
+                                    <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <span class="text-3xl text-gray-500">{{strtoupper(substr($user->name, 0, 1))}}</span>
+                                    </div>
+                                @endif
+                                <div>
+                                    <h1 class="text-3xl font-bold text-gray-800">{{$user->name}}</h1>
+                                    <div class="flex gap-2 mt-2">
+                                        @foreach ($user->roles as $role)
+                                            <span class="px-3 py-1 text-sm font-semibold bg-seagreen text-white rounded-full">{{$role->name}}</span>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
+
+                            <a href="{{route('users.edit', $user)}}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"> Edit</a>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -123,24 +128,20 @@
                                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Personal Information</h2>
                                 <div class="space-y-2">
                                     <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Father Name:</span>
+                                        <span class="font-medium">{{$user->father_name ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
                                         <span class="w-32 text-gray-600">Mother Name:</span>
                                         <span class="font-medium">{{$user->mother_name ?? 'Not provided'}}</span>
                                     </p>
                                     <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Wife Name:</span>
+                                        <span class="font-medium">{{$user->wife_name ?? 'Not provided'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
                                         <span class="w-32 text-gray-600">Date of Birth:</span>
                                         <span class="font-medium">{{$user->date_of_birth ? $user->date_of_birth : 'Not provided'}}</span>
-                                    </p>
-                                    <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">Gender:</span>
-                                        <span class="font-medium">{{$user->gender ?? 'Not provided'}}</span>
-                                    </p>
-                                    <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">NID:</span>
-                                        <span class="font-medium">{{$user->nid ?? 'Not provided'}}</span>
-                                    </p>
-                                    <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">Occupation:</span>
-                                        <span class="font-medium">{{$user->occupation ?? 'Not provided'}}</span>
                                     </p>
                                     <p class="flex items-center">
                                         <span class="w-32 text-gray-600">Blood Group:</span>
