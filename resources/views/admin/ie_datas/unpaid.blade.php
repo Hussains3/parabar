@@ -29,7 +29,7 @@
                         </tr>
                     </thead>
                     <tbody class="text-gray-600 text-sm">
-                        @forelse($ie_datas as $ie)
+                        @foreach($ie_datas as $ie)
                             <tr class="border-b border-gray-200 hover:bg-gray-100">
                                 <td class="py-3 px-6 text-left">
                                     {{  $loop->index+1 }}
@@ -41,7 +41,7 @@
                                     {{ $ie->file_datas->count() }}
                                 </td>
                                 <td class="py-3 px-6 text-right">
-                                    {{ number_format($ie->file_datas->sum('actual_total'), 2) }} Tk
+                                    {{ number_format($ie->file_datas->sum('balance'), 2) }} Tk
                                 </td>
                                 <td class="py-3 px-6 text-center">
                                     <div class="flex item-center justify-center">
@@ -52,13 +52,7 @@
                                     </div>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="py-6 text-center text-gray-500">
-                                    No unpaid files found
-                                </td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>

@@ -22,14 +22,14 @@
                     @method('POST')
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="">
+                        <div class="col-span-2">
                             <label for="org_name" class="block mb-2">Organization Name</label>
                             <input type="text" class="form-input" id="org_name" name="org_name" required autofocus>
                         </div> <!-- end -->
-                        <div>
+                        {{-- <div>
                             <label class="block text-gray-600 mb-2" for="org_logo">Logo</label>
                             <input type="file" id="org_logo" class="form-input border" name="org_logo">
-                        </div> <!-- end -->
+                        </div> <!-- end --> --}}
                         <div>
                             <label for="bin_no" class="block mb-2">BIN No</label>
                             <input type="text" class="form-input" id="bin_no" name="bin_no">

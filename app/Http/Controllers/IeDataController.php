@@ -34,10 +34,10 @@ class IeDataController extends Controller
     public function getUnpaidFiles(Request $request)
     {
         $ie_datas = Ie_data::whereHas('file_datas', function($query) {
-            $query->where('actual_total', '>', 0);
+            $query->whereIn('status', ['Unpaid', 'Partial']);
         })
         ->with(['file_datas' => function($query) {
-            $query->where('actual_total', '>', 0);
+            $query->whereIn('status', ['Unpaid', 'Partial']);
         }])
         ->get();
 

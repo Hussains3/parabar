@@ -47,6 +47,8 @@
                             <td>
                                 @if ($file_data->status == 'Unpaid')
                                     <span class="text-red-600">Unpaid</span>
+                                @elseif ($file_data->status == 'Partial')
+                                    <span class="text-orange-600">Partial</span>
                                 @else
                                 <span class="text-green-600">Paid</span>
                                 @endif

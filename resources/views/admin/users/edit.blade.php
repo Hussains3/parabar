@@ -6,7 +6,7 @@
         {{-- Page Content --}}
     <div class="flex flex-col gap-6">
 
-        <div class="card">
+        <div class="card max-w-4xl mx-auto">
 
             <div class="mt-5 md:mt-0 md:col-span-2">
 
@@ -16,13 +16,13 @@
 
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="p-6  sm:p-6">
-                                <div class="px-4 sm:px-0">
-                                    <h3 class="text-lg font-medium leading-6 text-gray-900">Personal Information</h3>
-                                    <p class="mt-1 text-sm text-gray-600">
-                                        User's personal and contact information.
-                                    </p>
-                                </div>
-                                        <div class="grid grid-cols-6 gap-6">
+                            <div class="px-4 sm:px-0">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Personal Information</h3>
+                                <p class="mt-1 text-sm text-gray-600">
+                                    User's personal and contact information.
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-6 gap-6">
                                 <!-- Basic Information -->
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="name" class="block">Name</label>
@@ -35,12 +35,12 @@
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="password" class="block">Password <span class="text-sm text-gray-500">(Leave blank to keep current)</span></label>
+                                    <label for="password" class="block">Password <span class="text-sm text-gray-500">(Leave blank to keep current, minimum 8 character)</span></label>
                                     <input type="password" name="password" id="password" class="form-input">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="password_confirmation" class="block">Confirm Password</label>
+                                    <label for="password_confirmation" class="block">Confirm Password <span class="text-sm text-gray-500">(Leave blank to keep current, minimum 8 character)</span></label>
                                     <input type="password" name="password_confirmation" id="password_confirmation" class="form-input">
                                 </div>
 

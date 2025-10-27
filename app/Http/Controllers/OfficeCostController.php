@@ -305,7 +305,7 @@ class OfficeCostController extends Controller
 
         $dailyCosts = OfficeCost::with('category')
             ->whereDate('cost_date', $date)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         $totalAmount = $dailyCosts->sum('amount');

@@ -43,20 +43,28 @@
                                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Basic Information</h2>
                                 <div class="space-y-2">
                                     <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">User ID:</span>
-                                        <span class="font-medium">{{$user->id}}</span>
+                                        <span class="w-32 text-gray-600">Staff ID:</span>
+                                        <span class="font-medium">{{$user->staff_id_no ?? 'N/A'}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Post:</span>
+                                        <span class="font-medium">{{$user->post}}</span>
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span class="w-32 text-gray-600">Work Site:</span>
+                                        <span class="font-medium">{{$user->work_site}}</span>
                                     </p>
                                     <p class="flex items-center">
                                         <span class="w-32 text-gray-600">Email:</span>
                                         <span class="font-medium text-seagreen">{{$user->email}}</span>
                                     </p>
                                     <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">Phone:</span>
-                                        <span class="font-medium">{{$user->phone ?? 'Not provided'}}</span>
+                                        <span class="w-32 text-gray-600">WhatsApp:</span>
+                                        <span class="font-medium">{{$user->whatsapp ?? 'Not provided'}}</span>
                                     </p>
                                     <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">Address:</span>
-                                        <span class="font-medium">{{$user->address ?? 'Not provided'}}</span>
+                                        <span class="w-32 text-gray-600">Phone:</span>
+                                        <span class="font-medium">{{$user->phone ?? 'Not provided'}}</span>
                                     </p>
                                 </div>
                             </div>
@@ -64,23 +72,9 @@
                             <div class="space-y-4">
                                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Contact Information</h2>
                                 <div class="space-y-2">
-                                    <!-- Primary Contact -->
-                                    <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">Phone:</span>
-                                        <span class="font-medium">{{$user->phone ?? 'Not provided'}}</span>
-                                    </p>
-                                    <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">WhatsApp:</span>
-                                        <span class="font-medium">{{$user->whatsapp ?? 'Not provided'}}</span>
-                                    </p>
-                                    <p class="flex items-center">
-                                        <span class="w-32 text-gray-600">Email:</span>
-                                        <span class="font-medium text-seagreen">{{$user->email}}</span>
-                                    </p>
 
                                     <!-- Family Contacts -->
-                                    <div class="mt-4 pt-4 border-t">
-                                        <p class="text-sm font-semibold text-gray-700 mb-2">Family Contacts</p>
+                                    <div class="">
                                         <div class="space-y-2">
                                             <p class="flex items-center">
                                                 <span class="w-32 text-gray-600">Father Mobile:</span>
@@ -101,26 +95,19 @@
 
                                     <!-- Addresses -->
                                     <div class="mt-4 pt-4 border-t">
-                                        <p class="text-sm font-semibold text-gray-700 mb-2">Addresses</p>
                                         <div class="space-y-2">
                                             <p class="flex items-start">
-                                                <span class="w-32 text-gray-600">Present:</span>
+                                                <span class="w-32 text-gray-600">Present Address:</span>
                                                 <span class="font-medium flex-1">{{$user->address ?? 'Not provided'}}</span>
                                             </p>
                                             <p class="flex items-start">
-                                                <span class="w-32 text-gray-600">Home:</span>
+                                                <span class="w-32 text-gray-600">Home Address:</span>
                                                 <span class="font-medium flex-1">{{$user->home_address ?? 'Not provided'}}</span>
                                             </p>
                                         </div>
                                     </div>
 
-                                    <!-- Reference -->
-                                    <div class="mt-4 pt-4 border-t">
-                                        <p class="flex items-center">
-                                            <span class="w-32 text-gray-600">Reference:</span>
-                                            <span class="font-medium">{{$user->ref_name ?? 'Not provided'}}</span>
-                                        </p>
-                                    </div>
+
                                 </div>
                             </div>
                             <!-- Personal Information -->
@@ -172,6 +159,13 @@
                                         <span class="font-medium">{{$user->last_login_at ?? 'Never logged in'}}</span>
                                     </p>
                                 </div>
+                                <!-- Reference -->
+                                    <div class="mt-4 pt-4 border-t">
+                                        <p class="flex items-center">
+                                            <span class="w-32 text-gray-600">Reference:</span>
+                                            <span class="font-medium">{{$user->ref_name ?? 'Not provided'}}</span>
+                                        </p>
+                                    </div>
                             </div>
                         </div>
                     </div>

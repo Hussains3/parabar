@@ -26,7 +26,7 @@
                                 <p class="mb-3">
                                     <span class="font-medium text-red-600">Total Unpaid Amount:</span>
                                     <span class="text-red-600 font-bold">
-                                        {{ $ie_data->file_datas->where('status', 'Unpaid')->sum('actual_total') }} Tk
+                                        {{ $ie_data->file_datas->where('status', 'Unpaid')->sum('balance') }} Tk
                                     </span>
                                 </p>
                                 @if($ie_data->org_logo)
@@ -100,10 +100,12 @@
                             <td>{{$file_data->be_number}}</td>
                             <td>{{$file_data->package}}</td>
                             <td>{{$file_data->manifest_number}}</td>
-                            <td>{{$file_data->actual_total}}</td>
+                            <td>{{$file_data->balance}}</td>
                             <td>
                                 @if ($file_data->status == 'Unpaid')
                                     <span class="text-red-600">Unpaid</span>
+                                @elseif ($file_data->status == 'Partial')
+                                    <span class="text-orange-600">Partial</span>
                                 @else
                                 <span class="text-green-600">Paid</span>
                                 @endif

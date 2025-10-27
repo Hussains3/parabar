@@ -5,7 +5,7 @@
         {{-- Page Content --}}
     <div class="flex flex-col gap-6">
 
-        <div class="card">
+        <div class="card max-w-4xl mx-auto">
 
             <div class="mt-5 md:mt-0 md:col-span-2">
 
@@ -24,22 +24,22 @@
                                 <!-- Basic Information -->
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="name" class="block">Name</label>
-                                    <input type="text" name="name" id="name" class="form-input" required>
+                                    <input type="text" name="name" id="name" class="form-input" required value="{{ old('name') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="email" class="block">Email</label>
-                                    <input type="email" name="email" id="email" class="form-input" required>
+                                    <input type="email" name="email" id="email" class="form-input" required value="{{ old('email') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="password" class="block">Password</label>
-                                    <input type="password" name="password" id="password" class="form-input" required>
+                                    <label for="password" class="block">Password <span>(Minimum 8 character)</span></label>
+                                    <input type="password" name="password" id="password" class="form-input" required value="{{ old('password') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="password_confirmation" class="block">Confirm Password</label>
-                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" required>
+                                    <label for="password_confirmation" class="block">Confirm Password <span>(Minimum 8 character)</span></label>
+                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" required value="{{ old('password_confirmation') }}">
                                 </div>
 
                                 <div>
@@ -55,17 +55,17 @@
                                 <!-- Staff Information -->
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="staff_id_no" class="block">Staff ID</label>
-                                    <input type="text" name="staff_id_no" id="staff_id_no" class="form-input">
+                                    <input type="text" name="staff_id_no" id="staff_id_no" class="form-input" value="{{ old('staff_id_no') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="post" class="block">Post</label>
-                                    <input type="text" name="post" id="post" class="form-input">
+                                    <input type="text" name="post" id="post" class="form-input" value="{{ old('post') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="work_site" class="block">Work Site</label>
-                                    <input type="text" name="work_site" id="work_site" class="form-input">
+                                    <input type="text" name="work_site" id="work_site" class="form-input" value="{{ old('work_site') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
@@ -81,64 +81,64 @@
                                 <!-- Contact Information -->
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="phone" class="block">Phone</label>
-                                    <input type="tel" name="phone" id="phone" class="form-input">
+                                    <input type="tel" name="phone" id="phone" class="form-input" value="{{ old('phone') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="whatsapp" class="block">WhatsApp</label>
-                                    <input type="tel" name="whatsapp" id="whatsapp" class="form-input">
+                                    <input type="tel" name="whatsapp" id="whatsapp" class="form-input" value="{{ old('whatsapp') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="date_of_birth" class="block">Date of Birth</label>
-                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-input">
+                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-input" value="{{ old('date_of_birth') }}">
                                 </div>
 
                                 <div class="col-span-6">
                                     <label for="home_address" class="block">Home Address</label>
-                                    <input type="text" name="home_address" id="home_address" class="form-input">
+                                    <input type="text" name="home_address" id="home_address" class="form-input" value="{{ old('home_address') }}">
                                 </div>
 
                                 <!-- Family Information -->
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="father_name" class="block">Father's Name</label>
-                                    <input type="text" name="father_name" id="father_name" class="form-input">
+                                    <input type="text" name="father_name" id="father_name" class="form-input" value="{{ old('father_name') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="father_mobile" class="block">Father's Mobile</label>
-                                    <input type="tel" name="father_mobile" id="father_mobile" class="form-input">
+                                    <input type="tel" name="father_mobile" id="father_mobile" class="form-input" value="{{ old('father_mobile') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="mother_name" class="block">Mother's Name</label>
-                                    <input type="text" name="mother_name" id="mother_name" class="form-input">
+                                    <input type="text" name="mother_name" id="mother_name" class="form-input" value="{{ old('mother_name') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="mother_mobile" class="block">Mother's Mobile</label>
-                                    <input type="tel" name="mother_mobile" id="mother_mobile" class="form-input">
+                                    <input type="tel" name="mother_mobile" id="mother_mobile" class="form-input" value="{{ old('mother_mobile') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="wife_name" class="block">Spouse's Name</label>
-                                    <input type="text" name="wife_name" id="wife_name" class="form-input">
+                                    <input type="text" name="wife_name" id="wife_name" class="form-input" value="{{ old('wife_name') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="wife_mobile" class="block">Spouse's Mobile</label>
-                                    <input type="tel" name="wife_mobile" id="wife_mobile" class="form-input">
+                                    <input type="tel" name="wife_mobile" id="wife_mobile" class="form-input" value="{{ old('wife_mobile') }}">
                                 </div>
 
                                 <!-- Reference Information -->
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="ref_name" class="block">Reference Name</label>
-                                    <input type="text" name="ref_name" id="ref_name" class="form-input">
+                                    <input type="text" name="ref_name" id="ref_name" class="form-input" value="{{ old('ref_name') }}">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="address" class="block">Address</label>
-                                    <input type="text" name="address" id="address" class="form-input">
+                                    <input type="text" name="address" id="address" class="form-input" value="{{ old('address') }}">
                                 </div>
 
                                 <!-- Photo Upload -->

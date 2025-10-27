@@ -8,29 +8,104 @@
         <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     </x-slot>
         {{-- Page Content --}}
-    <div class="flex flex-col gap-4">
+    <div class="flex gap-4">
+        <div class="card p-6 print:hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                    {{ isset($officeCost) ? 'Edit Office Cost' : 'Create New Office Cost' }}
+                </h2>
+                <a href="{{route('office-costs.index')}}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">All Cost</a>
+            </div>
 
-        <div class="card w-full">
+            <form method="POST" action="{{ route('office-costs.store') }}" enctype="multipart/form-data">
+                @csrf
+                @if(isset($officeCost))
+                    @method('PUT')
+                @endif
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Cost Category --}}
+                    <div class="col-span-2">
+                        <label for="cost_category_id" class="block text-sm font-medium text-gray-700">Cost Category</label>
+                        <select name="cost_category_id" id="cost_category_id" required
+                            class="form-input">
+                            <option value="">Select Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('cost_category_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Cost Date --}}
+                    <div>
+                        <label for="cost_date" class="block text-sm font-medium text-gray-700">Cost Date</label>
+                        <input type="date" name="cost_date" id="cost_date" required
+                            value="{{date('Y-m-d')}}" class="form-input">
+                        @error('cost_date')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Amount --}}
+                    <div>
+                        <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>
+                        <input type="number" name="amount" id="amount" step="0.01" min="0" required class="form-input">
+                        @error('amount')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Description --}}
+                    <div class="col-span-2">
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <input type="text" name="description" id="description"
+                            value="{{ old('description', $officeCost->description ?? '') }}"
+                            class="form-input">
+                        @error('description')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="submit"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                        {{ isset($officeCost) ? 'Update' : 'Create' }} Office Cost
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card flex-grow printable">
             <div class="p-6">
                 {{--  --}}
                 <div class="flex justify-between items-center mb-6">
                     <div class="mb-4">
                         <h1 class="text-xl">Daily cost <span class="text-md">({{$totalAmount."Taka"}})</span></h1>
-                        <p class="text-seagreen">{{$date}}</p>
+                        <p class="text-seagreen">{{ \Carbon\Carbon::parse($date)->format('d M Y') }}</p>
                     </div>
-                    <form action="{{ route('office-costs.dailycost') }}" method="GET" class="flex justify-center items-center gap-4">
-                        <div class="flex justify-start items-center gap-4">
-                            <label for="start_date" class="block ">Start Date</label>
-                            <input type="date" name="start_date" id="start_date" value="{{$date}}"
-                                class="mform-input">
-                        </div>
+                    <div class="">
 
-                        <div class="md:col-span-4 flex justify-end">
-                            <button type="submit" class="block text-center px-4 py-2 bg-gradient-to-r from-violet-400 to-purple-300 rounded-md shadow-md hover:shadow-lg hover:scale-105 duration-150 transition-all font-bold text-lg text-white">
-                                Apply Filters
-                            </button>
-                        </div>
-                    </form>
+                        <form action="{{ route('office-costs.dailycost') }}" method="GET" class="flex print:hidden justify-center items-center gap-4">
+                            <div class="flex justify-start items-center gap-4">
+                                <label for="start_date" class="block ">Start Date</label>
+                                <input type="date" name="start_date" id="start_date" value="{{$date}}"
+                                    class="mform-input">
+                            </div>
+
+                            <div class="md:col-span-4 flex justify-end">
+                                <button type="submit" class="block text-center px-4 py-2 bg-gradient-to-r from-violet-400 to-purple-300 rounded-md shadow-md hover:shadow-lg hover:scale-105 duration-150 transition-all font-bold text-lg text-white">
+                                    Apply Filters
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
                 </div>
 
                 <!-- Costs Table -->
@@ -52,57 +127,22 @@
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $cost->cost_date }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $cost->category->name }}</td>
                                     <td class="px-6 py-4">{{ $cost->description }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ number_format($cost->amount, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ number_format($cost->amount, 2) }} TK</td>
                                 </tr>
                             @endforeach
+                        </tbody>
+                        <tfoot>
                             <tr>
-                                <td></td>
-                                <td >
-                                    <div class="flex justify-between items-center">
-                                        <input type="text" name="cost_date" id="cost_date" value="{{$date}}" class="form-input" disabled>
-                                    </div>
-                                </td>
-                                <td >
-                                    <div class="flex justify-between items-center">
-                                        <select name="initial_cost_category_id" id="initial_cost_category_id" required
-                                            class="form-select">
-                                            <option value="">Select Category</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">
-                                                    {{ $category->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="flex justify-between items-center">
-                                        <input type="text" name="initial_description" id="initial_description" class="form-input">
-                                    </div>
+                                {{-- Spanning 4 columns to align the label and value correctly --}}
+                                <td colspan="4" class="px-6 py-4 text-right font-bold tracking-wider">Total Cost:</td>
 
-                                </td>
-                                <td class="flex justify-between items-end">
-                                    <div class="flex justify-between items-center">
-
-                                        <div class="flex justify-between items-center">
-                                            <input type="number" name="initial_amount" id="initial_amount" step="0.01" min="0" required  class="form-input">
-                                        </div>
-                                        <button type="submit" class="block text-center px-2 py-0.5 bg-gradient-to-r from-violet-400 to-purple-300 rounded-md shadow-md hover:shadow-lg hover:scale-105 duration-150 transition-all font-bold text-lg text-white"
-                                            id="formsubmitbtn">Add</button>
-                                    </div>
+                                {{-- Use $dailyCosts->sum('amount') to calculate the total --}}
+                                <td class="px-6 py-4 whitespace-nowrap font-bold">
+                                    {{ number_format($dailyCosts->sum('amount'), 2) }} TK
                                 </td>
                             </tr>
-                        </tbody>
+                        </tfoot>
                     </table>
-
-                    <form action="{{route('office-costs.store')}}" method="post" id="submitableform">
-                        @csrf
-                        <input type="hidden" name="cost_category_id">
-                        <input type="hidden" name="description">
-                        <input type="hidden" name="amount" >
-                        <input type="hidden" name="cost_date" value="{{$date}}">
-
-                    </form>
                 </div>
                 {{--  --}}
             </div>
@@ -111,33 +151,6 @@
 
     <x-slot name="script">
         <script>
-            // Handle the Add button click with jquery
-            $(document).ready(function() {
-                $('#formsubmitbtn').click(function(event) {
-                    event.preventDefault(); // Prevent the default form submission
-                    // Get values from the input fields
-                    var categoryId = $('#initial_cost_category_id').val();
-                    var description = $('#initial_description').val();
-                    var amount = $('#initial_amount').val();
-
-                    //Make sure categoryId and amount are provided
-                    if(!categoryId || !amount){
-                        alert('Please provide both category and amount.');
-                        return;
-                    }else{
-
-                        // Set the values in the hidden form
-                        var form = $('#submitableform');
-                        form.find('input[name="cost_category_id"]').val(categoryId);
-                        form.find('input[name="description"]').val(description);
-                        form.find('input[name="amount"]').val(amount);
-                        // Submit the hidden form
-                        form.submit();
-                    }
-
-
-                });
-            });
         </script>
     </x-slot>
 </x-app-layout>
