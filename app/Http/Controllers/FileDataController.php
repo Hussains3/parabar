@@ -29,7 +29,7 @@ class FileDataController extends Controller
      */
     public function dueindex()
     {
-        $file_datas = File_data::with('ie_data')->where('status', 'Unpaid')->get();
+        $file_datas = File_data::with('ie_data')->whereIn('status', ['Unpaid','Partial'])->get();
         return view('admin.file_datas.dueindex', compact('file_datas'));
     }
     /**
@@ -40,6 +40,18 @@ class FileDataController extends Controller
         $file_datas = File_data::with('ie_data')->where('status', 'Paid')->get();
         return view('admin.file_datas.paidindex', compact('file_datas'));
     }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function peymentBill()
+    {
+        $file_datas = File_data::with('ie_data')
+        ->where('status', 'Paid')
+        ->get();
+        return view('admin.file_datas.peymentBill', compact('file_datas'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -49,6 +61,13 @@ class FileDataController extends Controller
             'amount' => 'required|numeric|min:0',
             'payment_date' => 'required|date',
         ]);
+
+        $peyment_method = 'Cash';
+
+
+        if ($request->payment_method) {
+            $peyment_method = $request->payment_method;
+        }
 
         try {
             $file_data = File_data::findOrFail($id);
@@ -60,6 +79,7 @@ class FileDataController extends Controller
             $payments[] = [
                 'amount' => $request->amount,
                 'date' => $request->payment_date,
+                'peyment_method' => $peyment_method,
                 'recorded_at' => now(),
                 'recorded_by' => Auth::id(),
             ];
@@ -76,7 +96,6 @@ class FileDataController extends Controller
                 } elseif ($balance > 0 && $total_paid > 0) {
                     $payment_status = 'Partial';
                 } else {
-                    // This is the default case for 'Auto' when balance > 0 and total_paid == 0
                     $payment_status = 'Unpaid';
                 }
             } else {
@@ -98,6 +117,7 @@ class FileDataController extends Controller
             return redirect()->back()->with('error', 'Error recording payment: ' . $e->getMessage());
         }
     }
+
     public function create(Request $request)
     {
         $ie_datas = Ie_data::select('id', 'org_name')->orderBy('org_name')->get();
@@ -289,6 +309,12 @@ class FileDataController extends Controller
             $file_data->actual_other_cost = $request->actual_other_cost;
             $file_data->actual_total = $request->actual_total;
 
+            // IF bill total is not zero
+            if ($request->bill_total != 0 && $file_data->total_paid >= 0 ) {
+                //If file have already some payment
+                $file_data->balance = $request->bill_total - $file_data->total_paid;
+            }
+
 
             // Save all changes
             $file_data->save();
@@ -319,17 +345,6 @@ class FileDataController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with(['status' => 500, 'message' => 'Error deleting file: ' . $e->getMessage()]);
         }
-    }
-
-    public function isBeNumberUnique(Request $request){
-        // $year = date('Y');
-        $be_number = $request->be_number;
-
-        // $file_data = File_data::whereYear('created_at', $year )->where('be_number', $be_number)->first();
-        $file_data = Dj_year_be_numbers::where('be_number', $be_number)->first();
-
-      //  return $file_data;
-      return response()->json(['success' => $file_data]);
     }
 
     /**

@@ -28,6 +28,7 @@
                             <th>Bank</th>
                             <th>Importer/Exporter</th>
                             <th>Bill No</th>
+                            <th>Due Amount</th>
                             <th>Status</th>
                             <th class="text-right">Action</th>
                         </tr>
@@ -45,14 +46,16 @@
                             <td>{{$file_data->lc_bank}}</td>
                             <td>{{$file_data->ie_data->org_name}}</td>
                             <td>{{$file_data->bill_no}}</td>
+                            <td>{{$file_data->balance}}</td>
                             <td>
                                 @if ($file_data->status == 'Unpaid')
                                     <span class="text-red-600">Unpaid</span>
+                                @elseif ($file_data->status == 'Partial')
+                                    <span class="text-orange-600">Partial</span>
                                 @else
                                 <span class="text-green-600">Paid</span>
                                 @endif
                             </td>
-
                             <td class="flex justify-end items-center gap-2">
                                     <a class="text-seagreen/70 hover:text-seagreen  hover:scale-105 transition duration-150 ease-in-out text-2xl" href="{{route('file_datas.edit', $file_data->id)}}">
                                         <span class="menu-icon"><i class="mdi mdi-table-edit"></i></span>

@@ -40,7 +40,7 @@
                                 <td class="py-3 px-6 text-left">
                                     {{ $ie->file_datas->count() }}
                                 </td>
-                                <td class="py-3 px-6 text-right">
+                                <td class="py-3 px-6 text-left">
                                     {{ number_format($ie->file_datas->sum('balance'), 2) }} Tk
                                 </td>
                                 <td class="py-3 px-6 text-center">

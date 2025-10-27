@@ -548,7 +548,7 @@
 
 
                         <div class="self-end col-span-2 flex justify-end">
-                            <input type="hidden" name="status" value="Paid">
+                            <input type="hidden" name="bill_no" value="{{$file_data->bill_no}}">
                             <input type="submit" value="Update"
                                 class="font-mont px-10 py-4 bg-cyan-600 text-white font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 hover:scale-110"
                                 id="baccountSaveBtn">

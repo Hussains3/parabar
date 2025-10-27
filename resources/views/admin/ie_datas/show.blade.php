@@ -26,7 +26,7 @@
                                 <p class="mb-3">
                                     <span class="font-medium text-red-600">Total Unpaid Amount:</span>
                                     <span class="text-red-600 font-bold">
-                                        {{ $ie_data->file_datas->where('status', 'Unpaid')->sum('balance') }} Tk
+                                        {{ $ie_data->file_datas->whereIn('status', ['Unpaid', 'Partial'])->sum('balance') }} Tk
                                     </span>
                                 </p>
                                 @if($ie_data->org_logo)

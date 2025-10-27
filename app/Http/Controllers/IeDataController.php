@@ -99,11 +99,14 @@ class IeDataController extends Controller
     {
         $ie_data->load(['file_datas' => function($query) {
             $query->orderByRaw("CASE
-                WHEN status = 'Unpaid' AND actual_total > 0 THEN 1
+                -- Assign priority 1 to Unpaid or Partial status with a positive total
+                WHEN status IN ('Unpaid', 'Partial') AND actual_total > 0 THEN 1
+                -- Assign lower priority (2) to all others
                 ELSE 2
             END")
             ->orderBy('created_at', 'desc');
         }]);
+
         return view('admin.ie_datas.show', compact('ie_data'));
     }
 

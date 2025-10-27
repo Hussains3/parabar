@@ -21,6 +21,10 @@ use App\Http\Controllers\{
 
 // Authenticated user routes
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    //Peyment Bill
+    Route::get('peyment-bill', [FileDataController::class, 'peymentBill'])->name('file_datas.peyment-bill');
+
     // Office Costs Management
     Route::resource('cost-categories', CostCategoryController::class);
     Route::resource('office-costs', OfficeCostController::class);

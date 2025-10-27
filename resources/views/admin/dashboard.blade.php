@@ -64,16 +64,18 @@
                     </div>
                 </div>
             </a>
+            <a href="{{route('dueimex')}}">
 
-            <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
-                <div class="px-4 py-2">
-                    <div class="flex items-center justify-between">
-                        <div class="text-start">
-                            <h4 class="card-title">Importer/Exporter Payment Bill</h4>
+                <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
+                    <div class="px-4 py-2">
+                        <div class="flex items-center justify-between">
+                            <div class="text-start">
+                                <h4 class="card-title">Importer/Exporter Payment Bill</h4>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
             <a href="{{route('office-costs.monthly-report')}}">
                 <div class="card hover:scale-105 transition-transform min-h-20 flex items-center justify-center hover:bg-red-400">
                     <div class="px-4 py-2">
