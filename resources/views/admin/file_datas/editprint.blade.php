@@ -328,7 +328,7 @@
                                     <tr class="bg-gray-50 font-semibold">
                                         <td class="border border-gray-700 px-4 py-2" colspan="3">Total</td>
                                         <td class="border border-gray-700 px-4 py-2 text-right">
-                                            <input type="number" name="bill_total" id="bill_total" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
+                                            <input type="number" name="bill_total" id="bill_total" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0" readonly>
                                         </td>
                                     </tr>
                                     <tr class="bg-gray-50 font-semibold">
