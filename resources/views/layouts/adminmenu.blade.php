@@ -95,6 +95,11 @@
                             <span class="menu-text">Paid Files</span>
                         </a>
                     </li>
+                    <li class="menu-item">
+                        <a href="{{route('file_datas.report')}}" class="menu-link">
+                            <span class="menu-text">Report</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 

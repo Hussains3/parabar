@@ -24,6 +24,49 @@ class FileDataController extends Controller
         $file_datas = File_data::with('ie_data')->orderBy('status', 'DESC')->limit(1000)->get();
         return view('admin.file_datas.index', compact('file_datas'));
     }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function report(Request $request)
+    {
+        // Handle report type
+        $reportType = $request->input('report_type', 'custom');
+
+        switch ($reportType) {
+            case 'monthly':
+                $startDate = Carbon::now()->startOfMonth();
+                $endDate = Carbon::now()->endOfMonth();
+                break;
+            case 'yearly':
+                $startDate = Carbon::now()->startOfYear();
+                $endDate = Carbon::now()->endOfYear();
+                break;
+            case 'previous_month':
+                $startDate = Carbon::now()->subMonth()->startOfMonth();
+                $endDate = Carbon::now()->subMonth()->endOfMonth();
+                break;
+            case 'previous_year':
+                $startDate = Carbon::now()->subYear()->startOfYear();
+                $endDate = Carbon::now()->subYear()->endOfYear();
+                break;
+            default:
+                $startDate = $request->filled('start_date') ? Carbon::parse($request->start_date) : Carbon::now()->startOfMonth();
+                $endDate = $request->filled('end_date') ? Carbon::parse($request->end_date) : Carbon::now()->endOfMonth();
+        }
+
+
+        // Get the base data
+        $file_datas = File_data::whereBetween('file_date', [$startDate, $endDate])->get();
+
+        return view('admin.file_datas.report', compact('file_datas', 'startDate', 'endDate'));
+    }
+
+
+
+
+
+
     /**
      * Display a listing of the resource.
      */

@@ -97,6 +97,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('due_file_datas', [FileDataController::class, 'dueindex'])->name('file_datas.dueindex');
     Route::get('paid_file_datas', [FileDataController::class, 'paidindex'])->name('file_datas.paidindex');
+    Route::get('file_datas_report', [FileDataController::class, 'report'])->name('file_datas.report');
 
 });
 

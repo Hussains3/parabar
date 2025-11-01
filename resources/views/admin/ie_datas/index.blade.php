@@ -15,8 +15,16 @@
         {{-- Table --}}
         <div class="card rounded-tl-none">
             <div class="p-6">
+                <div class="flex justify-between items-center">
 
-                <h2 class="mb-4 text-xl">All Importer / Exporter</h2>
+                    <h2 class="mb-4 text-xl">All Importer / Exporter</h2>
+                    <a href="{{ route('ie_datas.create') }}"
+                        class="btn btn-seagreen inline-flex items-center px-4 py-2 bg-seagreen border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-seagreen/80 focus:bg-seagreen/80 active:bg-seagreen/90 focus:outline-none focus:ring-2 focus:ring-seagreen focus:ring-offset-2 transition ease-in-out duration-150">
+                        <span class="menu-icon mr-2"><i class="mdi mdi-plus-box"></i></span>
+                        Add New
+                    </a>
+                </div>
+
                 <table id="ie_dataTable" class="display stripe text-xs sm:text-base" style="width:100%">
                     <thead>
                         <tr>
