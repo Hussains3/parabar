@@ -1011,12 +1011,16 @@ label {
 }
 
 /* Dark mode styles */
+
 :is([data-mode="dark"] .form-input),
-:is([data-mode="dark"] .form-select) {
+    :is([data-mode="dark"] .form-textarea),
+    :is([data-mode="dark"] .form-select),
+    :is([data-mode="dark"] .form-multiselect){
     --tw-border-opacity: 1;
     border-color: rgb(55 65 81 / var(--tw-border-opacity));
     --tw-text-opacity: 1;
-    color: rgb(156 163 175 / var(--tw-text-opacity));
+    color: rgb(181 186 195 / var(--tw-text-opacity));
+    background-color: #111827;
 }
 
 :is([data-mode="dark"] .form-input:focus),

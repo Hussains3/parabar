@@ -35,6 +35,7 @@ class UpdateIe_dataRequest extends FormRequest
             'email_secondary' => 'nullable',
             'house_distric' => 'nullable',
             'address' => 'nullable',
+            'commission_percentage' => 'nullable',
             'post' => 'nullable',
         ];
     }

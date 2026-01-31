@@ -57,6 +57,7 @@
                         <p class="">Total Bill: {{ $file_datas->sum('bill_total') }} Tk</p>
                         <p class="">Total Paid: {{ $file_datas->sum('total_paid') }} Tk</p>
                         <p class="">Total Due: {{ $file_datas->sum('balance') }} Tk</p>
+                        <p class="">Total Profit: {{ $file_datas->sum('approximate_profit') }} Tk</p>
                     </div>
                 </div>
 

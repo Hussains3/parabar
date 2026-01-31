@@ -5,21 +5,14 @@
 @tailwind utilities;
 
 
-.form-input,.form-textarea,.form-select,.form-multiselect{
-    -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
-    background-color: #fff;
-    border-color: #6b7280;
-    border-width: 1px;
-    border-radius: 3px;
-    padding-top: 0.2rem;
-    padding-right: 0.75rem;
-    padding-bottom: 0.2rem;
-    padding-left: 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5rem;
-    --tw-shadow: 0 0 #0000;
+.form-input,
+    .form-textarea,
+    .form-select,
+    .form-multiselect {
+    @apply appearance-none border border-gray-500 rounded-sm px-3 py-1 text-base leading-6 shadow-sm;
+}
+.form-none {
+    @apply appearance-none border-none py-0 pr-10 pl-3 leading-6 shadow-sm bg-transparent;
 }
 
 

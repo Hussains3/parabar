@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('house_distric')->nullable();
             $table->string('address')->nullable();
             $table->string('post')->nullable();
+            $table->string('commission_percentage')->nullable();
             $table->timestamps();
         });
     }

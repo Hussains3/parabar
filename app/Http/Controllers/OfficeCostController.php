@@ -29,7 +29,7 @@ class OfficeCostController extends Controller
 
         // Get monthly bills from file_datas
         $monthlyBills = DB::table('file_datas')
-            ->selectRaw('MONTH(file_date) as month, SUM(total_paid - actual_total) as total_bill')
+            ->selectRaw('MONTH(file_date) as month, SUM(approximate_profit) as total_bill')
             ->where('status', 'paid')
             ->whereYear('file_date', $year)
             ->groupBy('month')

@@ -5,20 +5,6 @@
 
     {{-- Header Style --}}
     <x-slot name="headerstyle">
-        <style>
-            .ui-autocomplete {
-                background-color: #fff;
-                border: 1px solid #ccc;
-                max-height: 200px;
-                overflow-y: auto;
-                z-index: 1000;
-            }
-
-            .ui-menu-item {
-                padding: 5px 10px;
-                cursor: pointer;
-            }
-        </style>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
@@ -30,335 +16,337 @@
 
 
         {{-- Form --}}
-        <div class="card flex-grow max-w-2xl mx-auto">
+        <div class="card flex-grow max-w-7xl mx-auto">
             <div class="p-6">
-                <form class="" id="fileReciveForm" enctype="multipart/form-data"
+                <!-- File create form -->
+                <form class="" id="fileCreateForm" enctype="multipart/form-data"
                     action="{{ route('file_datas.store') }}" method="POST">
                     @csrf
                     @method('POST')
                     <div class="">
 
-                        {{-- Section One --}}
-                        <div class="grid grid-cols-4 gap-4 mb-4 bg-center bg-no-repeat bg-contain bg-opacity-10 backdrop-blur-2xl"
-                            style="background-image: url('{{ asset('bcnft.png') }}');">
+                        {{-- File Information --}}
+                        <h2 class="text-lg font-semibold text-center">Input Bill Voucher Information</h2>
+                        <div class="card p-4">
+                            <p class="text-sm font-semibold text-seagreen">File Information</p>
+
+                            <div class="grid grid-cols-3 gap-x-2 gap-y-1">
+                                <div class="flex items-center">
+                                    <label for="job_no">JOB NO:</label>
+                                    <input type="text" name="job_no" id="job_no" class="form-none"
+                                        placeholder="Enter Job No">
+                                </div>
+                                <div class="flex items-center">
+                                    <label for="bill_no">BILL NO:</label>
+                                    <input type="text" name="bill_no" id="bill_no" class="form-none" readonly>
+                                </div>
+                                <div class="flex items-center">
+                                    <label for="ie_data_id">TO M/S</label>
+                                    <select name="ie_data_id" id="ie_data_id" class="form-none">
+                                        @foreach ($ie_datas as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (isset($_GET['id']) && $_GET['id'] == $item->id) selected @endif>{{ $item->org_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div> <!-- end -->
+
+                                <div class="flex items-center">
+                                    <label for="manifest_number">Manifest No</label>
+                                    <input type="text" class="form-none" id="manifest_number"
+                                        name="manifest_number" placeholder="Manifestnumber" required autofocus>
+
+                                </div> <!-- end -->
 
 
-                            <div class="col-span-4">
-                                <label for="manifest_no" class="block mb-2">Importer/Exporter</label>
-                                <select name="ie_data_id" id="ie_data_id" class="form-input">
-                                    @foreach ($ie_datas as $item)
-                                        <option value="{{ $item->id }}"
-                                            @if (isset($_GET['id']) && $_GET['id'] == $item->id) selected @endif>{{ $item->org_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="file_date">B/E Date</label>
+                                    <input type="text" class="form-none" id="file_date" name="file_date" required
+                                        value="{{ date('d/m/Y') }}">
+                                    {{-- skipme --}}
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="package">Total Pkg</label>
+                                    <input type="text" class="form-none" id="package" name="package" required>
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="delivary_date">Delivary Date</label>
+                                    <input type="text" class="form-none" id="delivary_date" name="delivary_date"
+                                        required value="{{ date('d/m/Y') }}">
+                                    {{-- skipme --}}
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="lc_no">LC Number</label>
+                                    <input type="text" class="form-none" id="lc_no" name="lc_no" required>
 
-                            <div class="">
-                                <label for="manifest_number" class="block mb-2">Manifest Number</label>
-                                <input type="text" class="form-input" id="manifest_number" name="manifest_number"
-                                    placeholder="Manifestnumber" required autofocus>
-
-                            </div> <!-- end -->
-
-                            <div class="">
-                                <label for="be_number" class="block mb-2">B/E Number</label>
-                                <input type="text" class="form-input" id="be_number" name="be_number"
-                                    placeholder="B/E Number" required>
-                            </div> <!-- end -->
-                            <div class="">
-                                <label for="file_date" class="block mb-2">Date</label>
-                                <input type="text" class="form-input" id="file_date" name="file_date"
-                                    required value="{{ date('d/m/Y') }}">
-                                {{-- skipme --}}
-                            </div> <!-- end -->
-                            <div class="">
-                                <label for="package" class="block mb-2">Package</label>
-                                <input type="text" class="form-input" id="package" name="package" required>
-
-                            </div> <!-- end -->
-                            <div class="">
-                                <label for="lc_no" class="block mb-2">LC Number</label>
-                                <input type="text" class="form-input" id="lc_no" name="lc_no" required>
-
-                            </div> <!-- end -->
-                            <div class="">
-                                <label for="lc_value" class="block mb-2">LC Value</label>
-                                <input type="number" class="form-input" id="lc_value" name="lc_value" step="0.01" required>
-
-                            </div> <!-- end -->
-                            <div class="col-span-2">
-                                <label for="lc_bank" class="block mb-2">LC Bank</label>
-                                <input list="banks" class="form-input" name="lc_bank" id="lc_bank">
-
-                                <datalist id="banks">
-                                    @php
-                                        $banksJson = file_get_contents(base_path('banks.json'));
-                                        $banks = json_decode($banksJson, true);
-                                    @endphp
-                                    @foreach ($banks as $bank)
-                                        <option value="{{ $bank['BankName'] }}">
-                                    @endforeach
-                                </datalist>
-
-                            </div> <!-- end -->
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="net_wt">N.WT</label>
+                                    <input type="text" class="form-none" id="net_wt" name="net_wt">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="goods_name">Goods</label>
+                                    <input type="text" class="form-none" id="goods_name" name="goods_name">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="invoice_number">Invoice No</label>
+                                    <input type="number" class="form-none" id="invoice_number"
+                                        name="invoice_number" step="0.01" required>
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="invoice_date">Invoice Date</label>
+                                    <input type="date" class="form-none" id="invoice_date" name="invoice_date"
+                                        step="0.01">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="be_number">B/E No</label>
+                                    <input type="text" class="form-none" id="be_number" name="be_number"
+                                        placeholder="B/E Number" required>
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="be_date">B/E Date</label>
+                                    <input type="text" class="form-none" id="be_date" name="be_date"
+                                        placeholder="B/E Number" required>
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="lc_value">Invoice Value</label>
+                                    <input type="number" class="form-none" id="lc_value" name="lc_value"
+                                        step="0.01" required>
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="dollar_rate">Dollar Rate</label>
+                                    <input type="number" class="form-none" id="dollar_rate" name="dollar_rate">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="ass_value">Ass Value</label>
+                                    <input type="number" class="form-none" id="ass_value" name="ass_value"
+                                        readonly>
+                                </div> <!-- end -->
+                            </div>
                         </div>
-                        {{-- Bill table --}}
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-collapse border border-gray-700 mb-4">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="border border-gray-700 px-1 py-[1px] text-left w-16">Sl.</th>
-                                        <th class="border border-gray-700 px-1 py-[1px] text-left">Subject</th>
-                                        <th class="border border-gray-700 px-1 py-[1px] text-left w-32">Reference</th>
-                                        <th class="border border-gray-700 px-1 py-[1px] text-right w-32">Cost</th>
-                                    </tr>
+
+                        {{-- Goods Information --}}
+                        <div class="card p-4">
+                            <p class="text-sm font-semibold text-seagreen">Goods Information</p>
+                            <table class="border-collapse border border-gray-400 w-full">
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Goods recept DT</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right"><input type="date"
+                                            class="bg-transparent border-none p-0 w-full" id="goods_recept_date"
+                                            name="goods_recept_date"></td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Document recept DT</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right"><input type="date"
+                                            class="bg-transparent border-none p-0 w-full" id="document_recept_date"
+                                            name="document_recept_date"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Bond license recept DT
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right"><input type="date"
+                                            class="bg-transparent border-none p-0 w-full"
+                                            id="bond_license_recept_date" name="bond_license_recept_date"></td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Advance TK recept DT
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right"><input type="date"
+                                            class="bg-transparent border-none p-0 w-full" id="advance_paid_date"
+                                            name="advance_paid_date"></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="grid grid-cols-6">
+                            {{-- Remarks --}}
+                            <div class="card p-4 col-span-2 gap-4">
+                                <div class="text-sm font-semibold text-seagreen">Remarks</div>
+                                <table class="border-collapse border border-gray-400 w-full" id="remarksTable">
+                                    <tbody>
+                                        <tr>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-left">
+                                                <input type="text" class="bg-transparent border-none p-0" name="remarks_name[]" value="-">
+                                            </td>
+                                            <td class="border border-gray-400 px-1 py-[1px] relative group">
+                                                <input type="number" class="text-left bg-transparent border-none p-0 max-w-10" name="remarks_value[]" value="0">
+                                                <button class="text-red-400 cursor-pointer text-base absolute right-2 top-[2px] invisible group-hover:visible" onclick="removeRow(this)"><i class="mdi mdi-delete"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {{-- Receiptable --}}
+                            <div class="card p-4 col-span-4">
+                                <div class="text-sm font-semibold text-seagreen">Receiptable</div>
+                                <table class="border-collapse border border-gray-400 w-full" id="receiptableTable">
+                                    <thead>
+                                        <th class="border border-gray-400 px-1 py-[1px] text-left w-16">Description
+                                        </th>
+                                        <th class="border border-gray-400 px-1 py-[1px] text-left w-16">No</th>
+                                        <th class="border border-gray-400 px-1 py-[1px] text-left w-16">Date</th>
+                                        <th class="border border-gray-400 px-1 py-[1px] text-right w-16 text-nowrap">
+                                            Amount (Tk)</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-left min-w-96">
+                                                <input type="text" class="bg-transparent border-none p-0 w-full"
+                                                    name="receptable_descriptions[]" value="-">
+                                            </td>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-center min-w-32">
+                                                <input type="text" class="bg-transparent border-none p-0 w-full"
+                                                    name="receptable_numbers[]" value="-">
+                                            </td>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-left min-w-32">
+                                                <input type="text" class="bg-transparent border-none p-0 w-full"
+                                                    name="receptable_date[]" value="-">
+                                            </td>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-right max-w-32 relative group">
+                                                <input type="number" class="bg-transparent border-none p-0 w-28" name="receptable_amounts[]" value="0">
+                                                <button class="text-red-400 cursor-pointer text-base absolute right-2 top-[2px] invisible group-hover:visible rowRemove" onclick="removeRow(this)"><i class="mdi mdi-delete"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-left w-16"
+                                                colspan="3">Total Receptable</td>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-right w-16">
+                                                <input type="number" name="receptable_total" id="receptable_total" class="bg-transparent border-none p-0 w-full">
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        {{-- Miscellaneous and Other Information --}}
+                        <div class="card p-4">
+                            <div class="text-sm font-semibold text-seagreen">Miscellaneous and Others</div>
+                            <table class="border border-gray-400 border-collapse w-full" id="miscellaneousTable">
+                                <thead>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-left">Details</th>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-left">No</th>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-left">Date</th>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-left">Cost</th>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-right">Amount (Tk)</th>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody>
                                     <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">1</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Coat Fee</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_coat_fee" id="actual_coat_fee" value="25" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
+                                        <td class="border border-gray-400 px-1 py-[1px] text-left">
+                                            <input type="text" name="miscellaneous_detailses[]" class="bg-transparent border-none p-0 w-full" value="-">
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">2</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Association B/E Entry Fee</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_asso_be_entry_fee" id="actual_asso_be_entry_fee" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
+                                        <td class="border border-gray-400 px-1 py-[1px] text-left max-w-28">
+                                            <input type="text" name="miscellaneous_numbers[]" class="bg-transparent border-none p-0 max-w-28" value="-">
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="3">3</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="3">Cargo Branch </td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ARO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_cargo_branch_aro" id="actual_cargo_branch_aro" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
+                                        <td class="border border-gray-400 px-1 py-[1px] text-left max-w-28">
+                                            <input type="text" name="miscellaneous_dates[]" class="bg-transparent border-none p-0 max-w-28" value="-">
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">RO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_cargo_branch_ro" id="actual_cargo_branch_ro" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
+                                        <td class="border border-gray-400 px-1 py-[1px] text-left max-w-28">
+                                            <input type="text" name="miscellaneous_costs[]" class="bg-transparent border-none p-0 max-w-28" value="0">
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">AC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_cargo_branch_ac" id="actual_cargo_branch_ac" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">4</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Manifest Dept.</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_manifest_dept" id="actual_manifest_dept" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">5</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">42 Number Shed</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ARO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_fourtytwo_shed_aro" id="actual_fourtytwo_shed_aro" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="3">6</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="3">Examination</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Normal</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_examination_normal" id="actual_examination_normal" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">IMR</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_examination_irm" id="actual_examination_irm" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Goinda</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_examination_goinda" id="actual_examination_goinda" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="7">6</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="7">Assessement</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ARO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_assessement_aro" id="actual_assessement_aro" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">RO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_assessement_ro" id="actual_assessement_ro" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">AC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_assessement_ac" id="actual_assessement_ac" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">DC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_assessement_dc" id="actual_assessement_dc" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">JC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_assessement_jc" id="actual_assessement_jc" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ADC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_assessement_adc" id="actual_assessement_adc" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Commissioner</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_assessement_commissionar" id="actual_assessement_commissionar" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="2">8</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="2">Lab Test Fee</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Receptable</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_lab_test_fee_receptable" id="actual_lab_test_fee_receptable" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Sample Processing</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_lab_test_fee_sample_processing" id="actual_lab_test_fee_sample_processing" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">9</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Group+Sipay</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_group_sipay" id="actual_group_sipay" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">10</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Bank Chalan</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_bank_chalan" id="actual_bank_chalan" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">11</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Bank Chalan (Evening charge)</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_bank_chalan_evening" id="actual_bank_chalan_evening" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">12</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Delivery cost</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_delivery_cost" id="actual_delivery_cost" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="2">13</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="2">Unstamping Department</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">RO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_unstamping_dep_ro" id="actual_unstamping_dep_ro" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ARO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_unstamping_dep_aro" id="actual_unstamping_dep_aro" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">14</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Loading/Un-Loading</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_load_unload" id="actual_load_unload" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">15</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Shed</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_shed" id="actual_shed" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">16</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Exit</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_exit" id="actual_exit" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">17</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Finaly Out get</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_finaly_out_get" id="actual_finaly_out_get" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">18</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">File Commission</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_file_commission" id="actual_file_commission" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">19</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Other Cost</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="actual_other_cost" id="actual_other_cost" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-
-
-
-
-
-                                    <tr class="bg-gray-50 font-semibold">
-                                        <td class="border border-gray-700 px-4 py-2" colspan="3">Total</td>
-                                        <td class="border border-gray-700 px-4 py-2 text-right">
-                                            <input type="number" name="actual_total" id="actual_total" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
+                                        <td class="border border-gray-400 px-1 py-[1px] text-right max-w-28 relative group">
+                                            <input type="text" name="miscellaneous_amounts[]" class="bg-transparent border-none p-0 w-full" value="0">
+                                            <button class="text-red-400 cursor-pointer text-base absolute right-2 top-[2px] invisible group-hover:visible rowRemove" onclick="removeRow(this)"><i class="mdi mdi-delete"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td class="border border-gray-400 px-1 py-[1px] text-left" colspan="3"></td>
+                                        <td class="border border-gray-400 px-1 py-[1px] text-right">Total Miscellaneous
+                                        </td>
+                                        <td class="border border-gray-400 px-1 py-[1px] text-right w-16">
+                                            <input type="number" name="miscellaneous_total" id="miscellaneous_total" class="bg-transparent border-none p-0 w-full">
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
 
 
+                        {{-- Payment Details --}}
+                        <div class="card p-4">
+                            <div class="text-sm font-semibold text-seagreen">PAYMENT DETAILS</div>
+                            <table class="border border-gray-400 border-collapse w-full">
+                                <tr>
+                                    <td colspan="3" class="border border-gray-400 px-1 py-[1px] text-right">Total
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="number" name="total" id="total"
+                                            class="bg-transparent border-none p-0 text-right" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="" class="border border-gray-400 px-1 py-[1px] text-right">Date
+                                    </td>
+                                    <td colspan="" class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="date" class="bg-transparent border-none p-0" name="advance_paid_date">
+                                    </td>
+
+                                    <td colspan="" class="border border-gray-400 px-1 py-[1px] text-right">Advance
+
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="number" name="advance" id="advance"
+                                            class="bg-transparent border-none p-0" value="0">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="border border-gray-400 px-1 py-[1px] text-right">Balance
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="number" name="balance" id="balance"
+                                            class="bg-transparent border-none p-0" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">In Word</td>
+                                    <td colspan="3" class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="text" name="totalInWord" id="totalInWord"
+                                            class="bg-transparent border-none p-0 w-full capitalize text-right">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        {{-- Bank Details --}}
+                        <div class="card p-4">
+                            <div class="text-sm font-semibold text-seagreen">BANK DETAILS</div>
+                            <table class="border border-gray-400 border-collapse w-full">
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">A/C NAME</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="text" name="account_holder_name" id="account_holder_name"
+                                            class="bg-transparent border-none p-0 w-full capitalize text-right">
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">AC NO</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="text" name="account_number" id="account_number"
+                                            class="bg-transparent border-none p-0 w-full capitalize text-right">
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Bank Name</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right" colspan="3">
+                                        <input list="banks" class="bg-transparent border-none p-0 w-full text-right"
+                                            name="lc_bank" id="lc_bank">
+                                        <datalist id="banks">
+                                            @php
+                                                $banksJson = file_get_contents(base_path('banks.json'));
+                                                $banks = json_decode($banksJson, true);
+                                            @endphp
+                                            @foreach ($banks as $bank)
+                                                <option value="{{ $bank['BankName'] }}">
+                                            @endforeach
+                                        </datalist>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div>
 
 
                         <div class="self-end col-span-2 flex justify-end">
-                            <input type="hidden" name="bill_no" id="bill_no">
                             <input type="submit" value="Submit"
                                 class="font-mont px-10 py-4 bg-cyan-600 text-white font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 hover:scale-110"
                                 id="baccountSaveBtn">
@@ -375,44 +363,209 @@
 
     <x-slot name="script">
 
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script>
+           $(document).ready(function() {
+            // Constants
+            const SELECTORS = {
+                billNo: '#bill_no',
+                numberInputs: '#fileCreateForm input[type="number"]',
+                remarksTable: '#remarksTable',
+                receiptableTable: '#receiptableTable',
+                miscellaneousTable: '#miscellaneousTable',
+                receptableTotal: '#receptable_total',
+                miscellaneousTotal: '#miscellaneous_total',
+                total: '#total',
+                advance: '#advance',
+                balance: '#balance',
+                totalInWord: '#totalInWord',
+                lcValue: '#lc_value',
+                dollarRate: '#dollar_rate',
+                assValue: '#ass_value'
+            };
 
-            $(document).ready(function () {
+            // Initialize
+            generateBillNumber();
+            setupEventListeners();
+            calculateTotal();
+            updateReceptableTotalAndPaymentTotal();
+            updateMiscellaneousTotalAndPaymentTotal();
 
-                //Before submitting the form generate bill no
-                $('#fileReciveForm').on('submit', function(e) {
-                    const date = new Date();
-                    const year = date.getFullYear().toString().slice(-2); // Get last two digits of year
-                    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Get month with leading zero
-                    const day = ('0' + date.getDate()).slice(-2); // Get day with leading zero
-                    const randomNum = Math.floor(1000 + Math.random() * 9000); // Generate a random 4-digit number
-                    const billNo = `BV${year}${month}${day}${randomNum}`;
-                    $('#bill_no').val(billNo);
-                });
+            // Generate bill number
+            function generateBillNumber() {
+                const date = new Date();
+                const year = date.getFullYear().toString().slice(-2);
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const randomNum = Math.floor(1000 + Math.random() * 9000);
+                $(SELECTORS.billNo).val(`BV${year}${month}${day}${randomNum}`);
+            }
 
-                $('#fileReciveForm input[type="number"]').on('input', function() {
-                    //Make sure all number inputs value should not be lower than 0.00
-                    if (parseFloat($(this).val()) < 0) {
-                        $(this).val('0.00');
+            // Setup all event listeners
+            function setupEventListeners() {
+                // Prevent negative numbers and trigger calculation
+                $(SELECTORS.numberInputs).on('input', function() {
+                    const $this = $(this);
+                    if (parseFloat($this.val()) < 0) {
+                        $this.val('0.00');
                     }
-
                     calculateTotal();
                 });
-                // Initial calculation
+
+                // Dynamic row addition
+                $(SELECTORS.remarksTable).on('input', 'tr:last-child input',
+                    () => addRowIfNeeded(SELECTORS.remarksTable, createRemarksRow));
+
+                $(SELECTORS.receiptableTable + ' tbody').on('input', 'tr:last-child input',
+                    () => addRowIfNeeded(SELECTORS.receiptableTable + ' tbody', createReceiptableRow));
+
+                $(SELECTORS.miscellaneousTable + ' tbody').on('input', 'tr:last-child input',
+                    () => addRowIfNeeded(SELECTORS.miscellaneousTable + ' tbody', createMiscellaneousRow));
+
+                // Recalculate on input/change/removal
+                $(SELECTORS.receiptableTable + ' tbody')
+                    .on('input change', 'input[name="receptable_amounts[]"]', updateReceptableTotalAndPaymentTotal)
+                    .on('click', '.rowRemove', updateReceptableTotalAndPaymentTotal);
+
+                $(SELECTORS.miscellaneousTable + ' tbody')
+                    .on('input change', 'input[name="miscellaneous_amounts[]"]', updateMiscellaneousTotalAndPaymentTotal)
+                    .on('click', '.rowRemove', updateMiscellaneousTotalAndPaymentTotal);
+
+                // Dollar to Taka conversion
+                $(SELECTORS.lcValue + ', ' + SELECTORS.dollarRate).on('input', calculateAssValue);
+            }
+
+            // Generic function to calculate table totals
+            function calculateTableTotal(inputSelector) {
+                let total = 0;
+                $(inputSelector).each(function() {
+                    const value = parseFloat($(this).val());
+                    if (!isNaN(value)) total += value;
+                });
+                return total;
+            }
+
+            // Update receptable total and payment total
+            function updateReceptableTotalAndPaymentTotal() {
+                const total = calculateTableTotal('input[name="receptable_amounts[]"]');
+                $(SELECTORS.receptableTotal).val(total.toFixed(2));
                 calculateTotal();
-            });
+            }
+
+            // Update miscellaneous total and payment total
+            function updateMiscellaneousTotalAndPaymentTotal() {
+                const total = calculateTableTotal('input[name="miscellaneous_amounts[]"]');
+                $(SELECTORS.miscellaneousTotal).val(total.toFixed(2));
+                calculateTotal();
+            }
 
             // Calculate total cost
             function calculateTotal() {
-                let total = 0.00;
-                $('#fileReciveForm input[type="number"]').not('#actual_total,#lc_value').each(function() {
-                    const value = parseFloat($(this).val()) || 0.00;
-                    total += value;
-                });
-                // Update the total field with 2 decimal places
-                $('#actual_total').val(total.toFixed(2));
+                const receptableValue = parseFloat($(SELECTORS.receptableTotal).val()) || 0;
+                const miscellaneousValue = parseFloat($(SELECTORS.miscellaneousTotal).val()) || 0;
+                const total = receptableValue + miscellaneousValue;
+
+                $(SELECTORS.total).val(total.toFixed(2));
+
+                // Calculate balance
+                const advance = parseFloat($(SELECTORS.advance).val()) || 0;
+                const balance = total - advance;
+                $(SELECTORS.balance).val(balance.toFixed(2));
+
+                // Convert to words (assuming numberToWords function exists)
+                if (typeof numberToWords === 'function') {
+                    $(SELECTORS.totalInWord).val(numberToWords(balance));
+                }
             }
+
+            // Calculate dollar to taka conversion
+            function calculateAssValue() {
+                const lcValue = parseFloat($(SELECTORS.lcValue).val());
+                const dollarRate = parseFloat($(SELECTORS.dollarRate).val());
+
+                if (isNaN(lcValue) || isNaN(dollarRate)) {
+                    $(SELECTORS.assValue).val('0.00');
+                    return;
+                }
+
+                const assValue = lcValue * dollarRate;
+                $(SELECTORS.assValue).val(assValue.toFixed(2));
+            }
+
+            // Generic function to add row if needed
+            function addRowIfNeeded(tableSelector, rowCreator) {
+                const $lastRow = $(tableSelector + ' tr:last');
+                const hasContent = $lastRow.find('input').toArray().some(input =>
+                    $(input).val() !== '' && $(input).val() !== '0'
+                );
+
+                if (hasContent) {
+                    $(tableSelector).append(rowCreator());
+                }
+            }
+
+            // Row creators
+            function createRemarksRow() {
+                return `<tr>
+                    <td class="border border-gray-400 px-1 py-[1px] text-left">
+                        <input type="text" class="bg-transparent border-none p-0" name="remarks_name[]">
+                    </td>
+                    <td class="border border-gray-400 px-1 py-[1px] relative group">
+                        <input type="number" class="text-left bg-transparent border-none p-0 max-w-10" name="remarks_value[]" value="0">
+                        <button type="button" class="text-red-400 cursor-pointer text-base absolute right-2 top-[2px] invisible group-hover:visible" onclick="removeRow(this)">
+                            <i class="mdi mdi-delete"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            }
+
+            function createReceiptableRow() {
+                return createTableRow([
+                    { name: 'receptable_descriptions[]', type: 'text', value: '-', width: 'w-full' },
+                    { name: 'receptable_numbers[]', type: 'text', value: '-', width: 'w-full', align: 'center' },
+                    { name: 'receptable_date[]', type: 'text', value: '-', width: 'w-16' },
+                    { name: 'receptable_amounts[]', type: 'text', value: '0', width: 'w-28', align: 'right', hasButton: true }
+                ]);
+            }
+
+            function createMiscellaneousRow() {
+                return createTableRow([
+                    { name: 'miscellaneous_detailses[]', type: 'text', value: '-', width: 'w-full' },
+                    { name: 'miscellaneous_numbers[]', type: 'text', value: '-', width: 'w-full', align: 'center' },
+                    { name: 'miscellaneous_dates[]', type: 'text', value: '-', width: 'w-16' },
+                    { name: 'miscellaneous_costs[]', type: 'text', value: '0', width: 'w-28' }, // Added Cost column
+                    { name: 'miscellaneous_amounts[]', type: 'text', value: '0', width: 'w-28', align: 'right', hasButton: true }
+                ]);
+            }
+
+            // Generic table row creator
+            function createTableRow(columns) {
+                let row = '<tr>';
+                columns.forEach(col => {
+                    const align = col.align || 'left';
+                    const tdClass = col.hasButton ? 'relative group' : '';
+                    row += `<td class="border border-gray-400 px-1 py-[1px] text-${align} ${col.width || ''} ${tdClass}">
+                        <input type="${col.type}" class="bg-transparent border-none p-0 ${col.width || ''}"
+                            name="${col.name}" value="${col.value}">`;
+                    if (col.hasButton) {
+                        row += `<button type="button" class="text-red-400 cursor-pointer text-base absolute right-2 top-[2px] invisible group-hover:visible" onclick="removeRow(this)">
+                            <i class="mdi mdi-delete"></i>
+                        </button>`;
+                    }
+                    row += '</td>';
+                });
+                row += '</tr>';
+                return row;
+            }
+
+            // Make removeRow global
+            window.removeRow = function(button) {
+                $(button).closest('tr').remove();
+                updateReceptableTotalAndPaymentTotal();
+                updateMiscellaneousTotalAndPaymentTotal();
+            };
+        });
         </script>
     </x-slot>
 

@@ -20,10 +20,17 @@
                     @method('PATCH')
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="">
-                            <label for="org_name" class="block mb-2">Organization Name</label>
-                            <input type="text" class="form-input" id="org_name" name="org_name" required autofocus value="{{$ie_data->org_name ?? ''}}">
-                        </div> <!-- end -->
+                        <div class="col-span-2 flex gap-4">
+                            <div class="basis-4/5">
+
+                                <label for="org_name" class="block mb-2">Organization Name</label>
+                                <input type="text" class="form-input" id="org_name" name="org_name" required autofocus value="{{$ie_data->org_name ?? ''}}">
+                            </div>
+                            <div class="col-span-2">
+                                <label for="commission_percentage" class="block mb-2">%</label>
+                                <input type="number" class="form-input" id="commission_percentage" name="commission_percentage" required value="{{$ie_data->commission_percentage ?? '0.15'}}" step="0.01">
+                            </div>
+                        </div>
                         <div>
                             <label class="block text-gray-600 mb-2" for="org_logo">Logo</label>
                             <input type="file" id="org_logo" class="form-input border" name="org_logo">

@@ -26,12 +26,7 @@
 
     {{-- Page Content --}}
     <div class="flex flex-col gap-6">
-
-
-
-
-
-        <div class="card flex-grow max-w-2xl mx-auto printdiv">
+        <div class="card flex-grow mx-auto printdiv">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <p>Date:{{$file_data->file_date}}</p>
@@ -49,306 +44,373 @@
                 </div>
                 <p class="text-center mb-4">Mozid Tower (3rd floor),  Opposite of customs house,  Benapole, Jashore, Bangladesh</p>
                 {{-- Form --}}
-                <form class="" id="fileReciveForm" enctype="multipart/form-data"
-                    action="{{ route('file_datas.updateprint', $file_data) }}" method="POST">
-                    @csrf
-                    @method('PUT')
+                <form class="" id="filePrintForm">
                     <div class="">
-                        <div class="mb-2">
-                            <div class="font-semibold text-base col-span-4">
-                                <p>Importer/Exporter: {{$file_data->ie_data->org_name}}</p>
-                            </div> <!-- end -->
-                            <div class="flex justify-between gap-8">
-                                <div class="">
-                                    <div class=" text-base col-span-2">
-                                        <p>Manifest Number: {{$file_data->manifest_number}}</p>
-                                    </div> <!-- end -->
-                                    <div class=" text-base ">
-                                        <p>B/E Number: {{$file_data->be_number}}</p>
-                                    </div> <!-- end -->
-                                    <div class=" text-base ">
-                                        <p>Package: {{$file_data->package}}</p>
-                                    </div> <!-- end -->
+
+                        {{-- File Information --}}
+                        <div class="card p-4">
+                            <p class="text-sm font-semibold text-seagreen">File Information</p>
+
+                            <div class="grid grid-cols-3 gap-x-2 gap-y-1">
+                                <div class="flex items-center">
+                                    <label for="job_no">JOB NO:</label>
+                                    <input type="text" name="job_no" id="job_no" class="form-none"
+                                        placeholder="Enter Job No" value="{{ $file_data->job_no }}">
                                 </div>
-                                <div class="">
-                                    <div class=" text-base ">
-                                        <p>LC Number: {{$file_data->lc_no}}</p>
-                                    </div> <!-- end -->
-                                    <div class=" text-base ">
-                                        <p>LC Value: {{$file_data->lc_value}}</p>
-                                    </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="bill_no">BILL NO:</label>
+                                    <input type="text" name="bill_no" id="bill_no" class="form-none" readonly value="{{ $file_data->bill_no }}">
                                 </div>
+                                <div class="flex items-center">
+                                    <label for="ie_data_id">TO M/S</label>
+                                    <select name="ie_data_id" id="ie_data_id" class="form-none">
+                                        @foreach ($ie_datas as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if ($file_data->ie_data_id == $item->id) selected @endif>{{ $item->org_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div> <!-- end -->
+
+                                <div class="flex items-center">
+                                    <label for="manifest_number">Manifest No</label>
+                                    <input type="text" class="form-none" id="manifest_number"
+                                        name="manifest_number" placeholder="Manifestnumber" required value="{{ $file_data->manifest_number }}">
+
+                                </div> <!-- end -->
+
+
+                                <div class="flex items-center">
+                                    <label for="file_date">B/E Date</label>
+                                    <input type="text" class="form-none" id="file_date" name="file_date" required
+                                        value="{{ $file_data->file_date }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="package">Total Pkg</label>
+                                    <input type="text" class="form-none" id="package" name="package" required value="{{ $file_data->package }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="delivary_date">Delivary Date</label>
+                                    <input type="text" class="form-none" id="delivary_date" name="delivary_date"
+                                        required value="{{ $file_data->delivary_date }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="lc_no">LC Number</label>
+                                    <input type="text" class="form-none" id="lc_no" name="lc_no" required value="{{ $file_data->lc_no }}">
+
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="net_wt">N.WT</label>
+                                    <input type="text" class="form-none" id="net_wt" name="net_wt" value="{{ $file_data->net_wt }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="goods_name">Goods</label>
+                                    <input type="text" class="form-none" id="goods_name" name="goods_name" value="{{ $file_data->goods_name }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="invoice_number">Invoice No</label>
+                                    <input type="number" class="form-none" id="invoice_number"
+                                        name="invoice_number" step="0.01" required value="{{ $file_data->invoice_number }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="invoice_date">Invoice Date</label>
+                                    <input type="date" class="form-none" id="invoice_date" name="invoice_date"
+                                        step="0.01" value="{{ $file_data->invoice_date }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="be_number">B/E No</label>
+                                    <input type="text" class="form-none" id="be_number" name="be_number"
+                                        placeholder="B/E Number" required value="{{ $file_data->be_number }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="be_date">B/E Date</label>
+                                    <input type="text" class="form-none" id="be_date" name="be_date"
+                                        placeholder="B/E Number" required value="{{ $file_data->be_date }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="lc_value">Invoice Value</label>
+                                    <input type="number" class="form-none" id="lc_value" name="lc_value"
+                                        step="0.01" required value="{{ $file_data->lc_value }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="dollar_rate">Dollar Rate</label>
+                                    <input type="number" class="form-none" id="dollar_rate" name="dollar_rate" value="{{ $file_data->dollar_rate }}">
+                                </div> <!-- end -->
+                                <div class="flex items-center">
+                                    <label for="ass_value">Ass Value</label>
+                                    <input type="number" class="form-none" id="ass_value" name="ass_value"
+                                        readonly value="{{ $file_data->ass_value }}">
+                                </div> <!-- end -->
                             </div>
-                            <div class="text-base col-span-2">
-                                <p>LC Bank: {{$file_data->lc_bank}}</p>
-                            </div> <!-- end -->
-
                         </div>
-                        {{-- Bill table --}}
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-collapse border border-gray-700 mb-4">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="border border-gray-700 px-1 py-[1px] text-left w-16">Sl.</th>
-                                        <th class="border border-gray-700 px-1 py-[1px] text-left">Subject</th>
-                                        <th class="border border-gray-700 px-1 py-[1px] text-left w-32">Reference</th>
-                                        <th class="border border-gray-700 px-1 py-[1px] text-right w-32">Cost</th>
-                                    </tr>
+
+                        {{-- Goods Information --}}
+                        <div class="card p-4">
+                            <p class="text-sm font-semibold text-seagreen">Goods Information</p>
+                            <table class="border-collapse border border-gray-400 w-full">
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Goods recept DT</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right"><input type="date"
+                                            class="bg-transparent border-none p-0 w-full" id="goods_recept_date"
+                                            name="goods_recept_date" value="{{ $file_data->goods_recept_date }}"></td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Document recept DT</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right"><input type="date"
+                                            class="bg-transparent border-none p-0 w-full" id="document_recept_date"
+                                            name="document_recept_date" value="{{ $file_data->document_recept_date }}"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Bond license recept DT
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right"><input type="date"
+                                            class="bg-transparent border-none p-0 w-full"
+                                            id="bond_license_recept_date" name="bond_license_recept_date" value="{{ $file_data->bond_license_recept_date }}"></td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Advance TK recept DT
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right"><input type="date"
+                                            class="bg-transparent border-none p-0 w-full" id="advance_paid_date"
+                                            name="advance_paid_date" value="{{ $file_data->advance_paid_date }}"></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="flex justify-between">
+                            {{-- Remarks --}}
+                            <div class="card p-4 col-span-2 gap-4">
+                                <div class="text-sm font-semibold text-seagreen">Remarks</div>
+                                <table class="border-collapse border border-gray-400 w-full" id="remarksTable">
+                                    <tbody>
+                                        @if(is_array($file_data->remarks) && count($file_data->remarks) > 0)
+                                            @foreach($file_data->remarks as $remark)
+                                            <tr>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left">
+                                                    <input type="text" class="bg-transparent border-none p-0" name="remarks_name[]" value="{{ $remark['name'] ?? '-' }}">
+                                                </td>
+                                                <td class="border border-gray-400 px-1 py-[1px] relative group">
+                                                    <input type="number" class="text-left bg-transparent border-none p-0 max-w-10" name="remarks_value[]" value="{{ $remark['value'] ?? 0 }}">
+                                                    <button type="button" class="text-red-400 cursor-pointer text-base absolute right-2 top-[2px] invisible group-hover:visible" onclick="removeRow(this)"><i class="mdi mdi-delete"></i></button>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left">
+                                                    <input type="text" class="bg-transparent border-none p-0" name="remarks_name[]" value="-">
+                                                </td>
+                                                <td class="border border-gray-400 px-1 py-[1px] relative group">
+                                                    <input type="number" class="text-left bg-transparent border-none p-0 max-w-10" name="remarks_value[]" value="0">
+                                                    <button type="button" class="text-red-400 cursor-pointer text-base absolute right-2 top-[2px] invisible group-hover:visible" onclick="removeRow(this)"><i class="mdi mdi-delete"></i></button>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {{-- Receiptable --}}
+                            <div class="card p-4 col-span-4">
+                                <div class="text-sm font-semibold text-seagreen">Receiptable</div>
+                                <table class="border-collapse border border-gray-400 w-full" id="receiptableTable">
+                                    <thead>
+                                        <th class="border border-gray-400 px-1 py-[1px] text-left w-16">Description
+                                        </th>
+                                        <th class="border border-gray-400 px-1 py-[1px] text-left w-16">No</th>
+                                        <th class="border border-gray-400 px-1 py-[1px] text-left w-16">Date</th>
+                                        <th class="border border-gray-400 px-1 py-[1px] text-right w-16 text-nowrap">
+                                            Amount (Tk)</th>
+                                    </thead>
+                                    <tbody>
+                                        @if(is_array($file_data->receptables) && count($file_data->receptables) > 0)
+                                            @foreach($file_data->receptables as $item)
+                                            <tr>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left min-w-96">{{ $item['description'] ?? '-' }}</td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-center min-w-32">{{ $item['number'] ?? '-' }}</td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left min-w-32">{{ $item['date'] ?? '-' }}</td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-right max-w-32 relative group">{{ $item['amount'] ?? 0 }}</td>
+                                            </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left min-w-96">
+                                                    <input type="text" class="bg-transparent border-none p-0 w-full"
+                                                        name="receptable_descriptions[]" value="-">
+                                                </td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-center min-w-32">
+                                                    <input type="text" class="bg-transparent border-none p-0 w-full"
+                                                        name="receptable_numbers[]" value="-">
+                                                </td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left min-w-32">
+                                                    <input type="text" class="bg-transparent border-none p-0 w-full"
+                                                        name="receptable_date[]" value="-">
+                                                </td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-right max-w-32 relative group">
+                                                    <input type="number" class="bg-transparent border-none p-0 w-28" name="receptable_amounts[]" value="0">
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-left w-16" colspan="3">Total Receptable</td>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-right w-16">{{ $file_data->receptable_total ?? 0 }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        {{-- Miscellaneous and Other Information --}}
+                        <div class="card p-4">
+                            <div class="text-sm font-semibold text-seagreen">Miscellaneous and Others</div>
+                            <table class="border border-gray-400 border-collapse w-full" id="miscellaneousTable">
+                                <thead>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-left">Details</th>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-left">No</th>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-left">Date</th>
+                                    <th class="border border-gray-400 px-1 py-[1px] text-right text-nowrap">Amount (Tk)</th>
                                 </thead>
-                                <tbody class="text-sm">
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">1</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Coat Fee</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_coat_fee" id="bill_coat_fee" value="{{ $file_data->bill_coat_fee == 0 ? $file_data->actual_coat_fee : $file_data->bill_coat_fee }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">2</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Association B/E Entry Fee</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_asso_be_entry_fee" id="bill_asso_be_entry_fee" value="{{$file_data->bill_asso_be_entry_fee ==0 ? $file_data->actual_asso_be_entry_fee  : $file_data->bill_asso_be_entry_fee }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="3">3</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="3">Cargo Branch </td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ARO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_cargo_branch_aro" id="bill_cargo_branch_aro" value="{{ $file_data->bill_cargo_branch_aro == 0 ? $file_data->actual_cargo_branch_aro : $file_data->bill_cargo_branch_aro }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">RO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_cargo_branch_ro" id="bill_cargo_branch_ro" value="{{ $file_data->bill_cargo_branch_ro == 0 ? $file_data->actual_cargo_branch_ro : $file_data->bill_cargo_branch_ro }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">AC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_cargo_branch_ac" id="bill_cargo_branch_ac" value="{{ $file_data->bill_cargo_branch_ac == 0 ? $file_data->actual_cargo_branch_ac : $file_data->bill_cargo_branch_ac }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">4</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Manifest Dept.</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_manifest_dept" id="bill_manifest_dept" value="{{ $file_data->bill_manifest_dept == 0 ? $file_data->actual_manifest_dept : $file_data->bill_manifest_dept }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">5</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">42 Number Shed</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ARO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_fourtytwo_shed_aro" id="bill_fourtytwo_shed_aro" value="{{ $file_data->bill_fourtytwo_shed_aro == 0 ? $file_data->actual_fourtytwo_shed_aro : $file_data->bill_fourtytwo_shed_aro }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="3">6</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="3">Examination</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Normal</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_examination_normal" id="bill_examination_normal" value="{{ $file_data->bill_examination_normal == 0 ? $file_data->actual_examination_normal : $file_data->bill_examination_normal }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">IMR</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_examination_irm" id="bill_examination_irm" value="{{ $file_data->bill_examination_irm == 0 ? $file_data->actual_examination_irm : $file_data->bill_examination_irm }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Goinda</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_examination_goinda" id="bill_examination_goinda" value="{{ $file_data->bill_examination_goinda == 0 ? $file_data->actual_examination_goinda : $file_data->bill_examination_goinda }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="7">6</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="7">Assessement</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ARO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_assessement_aro" id="bill_assessement_aro" value="{{ $file_data->bill_assessement_aro == 0 ? $file_data->actual_assessement_aro : $file_data->bill_assessement_aro }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">RO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_assessement_ro" id="bill_assessement_ro" value="{{ $file_data->bill_assessement_ro == 0 ? $file_data->actual_assessement_ro : $file_data->bill_assessement_ro }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">AC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_assessement_ac" id="bill_assessement_ac" value="{{ $file_data->bill_assessement_ac == 0 ? $file_data->actual_assessement_ac : $file_data->bill_assessement_ac }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">DC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_assessement_dc" id="bill_assessement_dc" value="{{ $file_data->bill_assessement_dc == 0 ? $file_data->actual_assessement_dc : $file_data->bill_assessement_dc }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">JC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_assessement_jc" id="bill_assessement_jc" value="{{ $file_data->bill_assessement_jc == 0 ? $file_data->actual_assessement_jc : $file_data->bill_assessement_jc }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ADC</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_assessement_adc" id="bill_assessement_adc" value="{{ $file_data->bill_assessement_adc == 0 ? $file_data->actual_assessement_adc : $file_data->bill_assessement_adc }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Commissioner</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_assessement_commissionar" id="bill_assessement_commissionar" value="{{ $file_data->bill_assessement_commissionar == 0 ? $file_data->actual_assessement_commissionar : $file_data->bill_assessement_commissionar }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="2">8</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="2">Lab Test Fee</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Receptable</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_lab_test_fee_receptable" id="bill_lab_test_fee_receptable" value="{{ $file_data->bill_lab_test_fee_receptable == 0 ? $file_data->actual_lab_test_fee_receptable : $file_data->bill_lab_test_fee_receptable }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Sample Processing</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_lab_test_fee_sample_processing" id="bill_lab_test_fee_sample_processing" value="{{ $file_data->bill_lab_test_fee_sample_processing == 0 ? $file_data->actual_lab_test_fee_sample_processing : $file_data->bill_lab_test_fee_sample_processing }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">9</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Group+Sipay</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_group_sipay" id="bill_group_sipay" value="{{ $file_data->bill_group_sipay == 0 ? $file_data->actual_group_sipay : $file_data->bill_group_sipay }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">10</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Bank Chalan</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_bank_chalan" id="bill_bank_chalan" value="{{ $file_data->bill_bank_chalan == 0 ? $file_data->actual_bank_chalan : $file_data->bill_bank_chalan }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">11</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Bank Chalan (Evening charge)</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_bank_chalan_evening" id="bill_bank_chalan_evening" value="{{ $file_data->bill_bank_chalan_evening == 0 ? $file_data->actual_bank_chalan_evening : $file_data->bill_bank_chalan_evening }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">12</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Delivery cost</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_delivery_cost" id="bill_delivery_cost" value="{{ $file_data->bill_delivery_cost == 0 ? $file_data->actual_delivery_cost : $file_data->bill_delivery_cost }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="2">13</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]" rowspan="2">Unstamping Department</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">RO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_unstamping_dep_ro" id="bill_unstamping_dep_ro" value="{{ $file_data->bill_unstamping_dep_ro == 0 ? $file_data->actual_unstamping_dep_ro : $file_data->bill_unstamping_dep_ro }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">ARO</td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_unstamping_dep_aro" id="bill_unstamping_dep_aro" value="{{ $file_data->bill_unstamping_dep_aro == 0 ? $file_data->actual_unstamping_dep_aro : $file_data->bill_unstamping_dep_aro }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">14</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Loading/Un-Loading</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_load_unload" id="bill_load_unload" value="{{ $file_data->bill_load_unload == 0 ? $file_data->actual_load_unload : $file_data->bill_load_unload }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">15</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Shed</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_shed" id="bill_shed" value="{{ $file_data->bill_shed == 0 ? $file_data->actual_shed : $file_data->bill_shed }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">16</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Exit</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_exit" id="bill_exit" value="{{ $file_data->bill_exit == 0 ? $file_data->actual_exit : $file_data->bill_exit }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">17</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Finaly Out get</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_finaly_out_get" id="bill_finaly_out_get" value="{{ $file_data->bill_finaly_out_get == 0 ? $file_data->actual_finaly_out_get : $file_data->bill_finaly_out_get }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">18</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">File Commission</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_file_commission" id="bill_file_commission" value="{{ $file_data->bill_file_commission == 0 ? $file_data->actual_file_commission : $file_data->bill_file_commission }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-700 px-1 py-[1px]">19</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]">Other Cost</td>
-                                        <td class="border border-gray-700 px-1 py-[1px]"></td>
-                                        <td class="border border-gray-700 px-1 py-[1px] text-right">
-                                            <input type="number" name="bill_other_cost" id="bill_other_cost" value="{{ $file_data->bill_other_cost == 0 ? $file_data->actual_other_cost : $file_data->bill_other_cost }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
+                                <tbody>
+                                    @php
+                                        // Ensure miscellaneouses is an array and decode if it's a JSON string
+                                        $miscellaneouses = $file_data->miscellaneouses;
+                                        if (is_string($miscellaneouses)) {
+                                            $miscellaneouses = json_decode($miscellaneouses, true);
+                                        }
+                                        $miscellaneouses = is_array($miscellaneouses) ? $miscellaneouses : [];
+                                    @endphp
 
-
-
-
-
-                                    <tr class="bg-gray-50 font-semibold">
-                                        <td class="border border-gray-700 px-4 py-2" colspan="3">Total</td>
-                                        <td class="border border-gray-700 px-4 py-2 text-right">
-                                            <input type="number" name="bill_total" id="bill_total" value="0" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0" readonly>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-gray-50 font-semibold">
-                                        <td class="border border-gray-700 px-4 py-2" colspan="3">Total Paid</td>
-                                        <td class="border border-gray-700 px-4 py-2 text-right">
-                                            <input type="number" name="total_paid" id="total_paid" value="{{$file_data->total_paid ?? 0 }}" step="1" class="border-0 text-right w-full bg-transparent p-0 m-0">
-                                        </td>
-                                    </tr>
+                                    @if (!empty($miscellaneouses) && count($miscellaneouses) > 0)
+                                        @foreach ($miscellaneouses as $miscellaneous)
+                                            <tr>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left">{{ $miscellaneous['details'] ?? '-' }}</td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left max-w-28">{{ $miscellaneous['number'] ?? '-' }}</td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-left max-w-28">{{ $miscellaneous['date'] ?? '-' }}</td>
+                                                <td class="border border-gray-400 px-1 py-[1px] text-right max-w-28 relative group">{{ $miscellaneous['amount'] ?? '0' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-left">
+                                                <input type="text" name="miscellaneous_detailses[]"
+                                                    class="bg-transparent border-none p-0 w-full" value="-">
+                                            </td>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-left max-w-28">
+                                                <input type="text" name="miscellaneous_numbers[]"
+                                                    class="bg-transparent border-none p-0 max-w-28" value="-">
+                                            </td>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-left max-w-28">
+                                                <input type="text" name="miscellaneous_dates[]"
+                                                    class="bg-transparent border-none p-0 max-w-28" value="-">
+                                            </td>
+                                            <td class="border border-gray-400 px-1 py-[1px] text-right max-w-28 relative group">
+                                                <input type="text" name="miscellaneous_amounts[]"
+                                                    class="bg-transparent border-none p-0 w-full" value="0">
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td class="border border-gray-400 px-1 py-[1px] text-left px-4" colspan="2"></td>
+                                        <td class="border border-gray-400 px-1 py-[1px] text-right">Total Miscellaneous
+                                        </td>
+                                        <td class="border border-gray-400 px-1 py-[1px] text-right">{{ $file_data->miscellaneous_total ?? 0 }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+
+                        {{-- Payment Details --}}
+                        <div class="card p-4">
+                            <div class="text-sm font-semibold text-seagreen">PAYMENT DETAILS</div>
+                            <table class="border border-gray-400 border-collapse w-full">
+                                <tr>
+                                    <td colspan="3" class="border border-gray-400 px-1 py-[1px] text-right">Total
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">{{ $file_data->total }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="" class="border border-gray-400 px-1 py-[1px] text-right">Date
+                                    </td>
+                                    <td colspan="" class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="date" class="bg-transparent border-none p-0" value="{{ $file_data->advance_paid_date }}" readonly>
+                                    </td>
+
+                                    <td colspan="" class="border border-gray-400 px-1 py-[1px] text-right">Advance</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">
+                                        @php
+                                           // Check if advance is already included in payments (by note 'Advance Payment')
+                                            $hasAdvancePayment = collect($file_data->payments ?? [])->contains('note', 'Advance Payment');
+                                            $advanceVal = $file_data->advance;
+                                            
+                                            // Make readonly if hasAdvancePayment? 
+                                            // The user should still be able to edit it, and we sync it on backend.
+                                        @endphp
+
+                                        {{ $advanceVal }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="border border-gray-400 px-1 py-[1px] text-right">Balance
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">{{ $file_data->balance }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">In Word</td>
+                                    <td colspan="3" class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="text" name="totalInWord" id="totalInWord"
+                                            class="bg-transparent border-none p-0 w-full capitalize text-right"
+                                            value="{{ $file_data->total_in_word }}">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        {{-- Bank Details --}}
+                        <div class="card p-4">
+                            <div class="text-sm font-semibold text-seagreen">BANK DETAILS</div>
+                            <table class="border border-gray-400 border-collapse w-full">
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">A/C NAME</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="text" name="account_holder_name" id="account_holder_name"
+                                            class="bg-transparent border-none p-0 w-full capitalize text-right"
+                                            value="{{ $file_data->account_holder_name }}">
+                                    </td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">AC NO</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">
+                                        <input type="text" name="account_number" id="account_number"
+                                            class="bg-transparent border-none p-0 w-full capitalize text-right"
+                                            value="{{ $file_data->account_number }}">
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right">Bank Name</td>
+                                    <td class="border border-gray-400 px-1 py-[1px] text-right" colspan="3">
+                                        <input list="banks" class="bg-transparent border-none p-0 w-full text-right"
+                                            name="lc_bank" id="lc_bank" value="{{ $file_data->lc_bank }}">
+                                        <datalist id="banks">
+                                            @php
+                                                $banksJson = file_get_contents(base_path('banks.json'));
+                                                $banks = json_decode($banksJson, true);
+                                            @endphp
+                                            @foreach ($banks as $bank)
+                                                <option value="{{ $bank['BankName'] }}">
+                                            @endforeach
+                                        </datalist>
+                                    </td>
+
+                                </tr>
                             </table>
                         </div>
 
 
                         <div class="self-end col-span-2 flex justify-end">
-                            <input type="submit" value="Save & Print"
-                                class="font-mont print:hidden px-10 py-4 bg-cyan-600 text-white font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 hover:scale-110"
-                                id="baccountSaveBtn">
+                            <input type="submit" value="Print"
+                                class="font-mont px-10 py-4 bg-cyan-600 text-white font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 hover:scale-110 print:hidden"
+                                id="printBtn">
                         </div><!-- end -->
-
-
 
                     </div>
                 </form>
@@ -361,95 +423,12 @@
 
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script>
-
-            // Initialize all event handlers
-            function initializeEventHandlers() {
-                // Handle number input changes
-                $('#fileReciveForm input[type="number"]').on('input', function() {
-                    //Make sure all number inputs value should not be lower than 0.00
-                    if (parseFloat($(this).val()) < 0) {
-                        $(this).val('0.00');
-                    }
-                    calculateTotal();
-                });
-            }
-
-            $(document).ready(function () {
-                // Initialize handlers
-                initializeEventHandlers();
-
-                // Initial calculation
-                calculateTotal();
-
-                // Handle form submission
-                $('#fileReciveForm').on('submit', function(e) {
-                    e.preventDefault();
-
-                    const form = $(this);
-                    const submitBtn = form.find('input[type="submit"]');
-
-                    // Disable submit button to prevent double submission
-                    submitBtn.prop('disabled', true);
-
-                    $.ajax({
-                        url: form.attr('action'),
-                        method: 'POST',
-                        data: form.serialize(),
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        beforeSubmit: function(arr, form, options) {
-                            console.log(data);
-                        },
-                        success: function(response) {
-                            if (response.status === 'success') {
-                                // Prepare print content
-                                const $printArea = $('.printdiv').clone();
-                                // Print the content
-                                const originalContent = $('body').html();
-                                $('body').empty().append($printArea);
-                                window.print();
-                                $('body').html(originalContent);
-
-                                // Re-initialize event handlers after restoring content
-                                // initializeEventHandlers();
-                                // calculateTotal();
-                            } else {
-                                alert('Error: ' + response.message);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error details:', xhr.responseJSON || error);
-                            alert('Error submitting form. Please try again or contact support.');
-                        },
-                        complete: function() {
-                            // Re-enable submit button
-                            submitBtn.prop('disabled', false);
-                        }
-                    });
-                });
+            $('#printBtn').on('click', function(e) {
+                e.preventDefault();
+                window.print();
             });
 
-            // Calculate total cost
-            function calculateTotal() {
-                let total = 0.00;
-                $('#fileReciveForm input[type="number"]').not('#bill_total,#lc_value,#total_paid').each(function() {
-                    const value = parseFloat($(this).val()) || 0.00;
-                    total += value;
-                });
-                // Update the total field with 2 decimal places
-                $('#bill_total').val(total.toFixed(2));
-            }
 
-            // Print function
-            function printDiv() {
-                let printContent = $('.printdiv').html();
-                let originalContent = $('body').html();
-
-                $('body').html(printContent);
-                window.print();
-                $('body').html(originalContent);
-            }
         </script>
     </x-slot>
 

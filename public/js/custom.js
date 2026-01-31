@@ -243,11 +243,11 @@ $(document).ready(function() {
      */
     const html = document.documentElement;
     const lightDarkMode = document.getElementById('light-dark-mode');
-    
+
     // Check for saved theme preference, otherwise use system preference
-    const theme = localStorage.getItem('theme') || 
+    const theme = localStorage.getItem('theme') ||
                  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    
+
     // Apply the theme
     if (theme === 'dark') {
         html.classList.add('dark');
@@ -261,12 +261,67 @@ $(document).ready(function() {
     lightDarkMode.addEventListener('click', function() {
         const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
+
         // Toggle theme
         html.classList.toggle('dark');
         html.setAttribute('data-mode', newTheme);
-        
+
         // Save preference
         localStorage.setItem('theme', newTheme);
     });
 });
+
+
+
+function numberToWords(num) {
+    if (num === 0) return "zero";
+
+    const ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    const teens = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+    const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+    const thousands = ["", "thousand", "million", "billion"];
+
+    function convertHundreds(n) {
+      let str = "";
+
+      if (n >= 100) {
+        str += ones[Math.floor(n / 100)] + " hundred";
+        n %= 100;
+        if (n > 0) str += " ";
+      }
+
+      if (n >= 20) {
+        str += tens[Math.floor(n / 10)];
+        n %= 10;
+        if (n > 0) str += " " + ones[n];
+      } else if (n >= 10) {
+        str += teens[n - 10];
+      } else if (n > 0) {
+        str += ones[n];
+      }
+
+      return str;
+    }
+
+    if (num < 0) {
+      return "minus " + numberToWords(Math.abs(num));
+    }
+
+    let result = "";
+    let groupIndex = 0;
+
+    while (num > 0) {
+      let group = num % 1000;
+      if (group !== 0) {
+        let groupWords = convertHundreds(group);
+        if (thousands[groupIndex]) {
+          groupWords += " " + thousands[groupIndex];
+        }
+        result = groupWords + (result ? " " + result : "");
+      }
+      num = Math.floor(num / 1000);
+      groupIndex++;
+    }
+
+    return result;
+}

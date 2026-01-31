@@ -1,0 +1,83 @@
+{
+    "be_number": "100459",
+    "manifest_number": "1000002",
+    "job_no": "gerfgrefrfwer",
+    "bill_no": "BV2512161710",
+    "ie_data_id": "3",
+    "file_date": "16/12/2025",
+    "package": "58158851fff",
+
+    "delivary_date": "16/12/2025",
+    "lc_no": "544152278278",
+    "net_wt": "200",
+    "goods_name": "gfdgfdg",
+    "invoice_number": "6846511",
+    "invoice_date": "2026-07-10",
+    "be_date": "22/03/2025",
+    "lc_value": "5000",
+    "dollar_rate": "123",
+    "ass_value": "615000.00",
+    "goods_recept_date": "2025-12-19",
+    "document_recept_date": "2025-12-19",
+    "bond_license_recept_date": "2025-12-26",
+    "advance_paid_date": "2025-12-19",
+    "remarks_name": [
+      "kjn",
+      "Invoice",
+      null
+    ],
+    "remarks_value": [
+      "5",
+      "2",
+      "0"
+    ],
+    "receptable_descriptions": [
+      "fdfsdfsd",
+      "dsfsdfsdf",
+      "-"
+    ],
+    "receptable_numbers": [
+      "5684812",
+      "-",
+      "-"
+    ],
+    "receptable_date": [
+      "12/10/2025",
+      "12/10/2025",
+      "-"
+    ],
+    "receptable_amounts": [
+      "2000",
+      "1000",
+      "0"
+    ],
+    "receptable_total": "3000.00",
+    "miscellaneous_detailses": [
+      "sdfsdf",
+      "hresf",
+      "-"
+    ],
+    "miscellaneous_numbers": [
+      "-",
+      "-",
+      "-"
+    ],
+    "miscellaneous_dates": [
+      "-",
+      "-",
+      "-"
+    ],
+    "miscellaneous_amounts": [
+      "100",
+      "200",
+      "0"
+    ],
+    "miscellaneous_total": "300.00",
+    "total": "3300.00",
+    "advance": "3000",
+    "balance": "300.00",
+    "totalInWord": "three hundred",
+    "account_holder_name": "someone",
+    "account_number": "0132584981521654",
+    "lc_bank": "Bangladesh Development Bank"
+  }

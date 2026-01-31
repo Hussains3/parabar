@@ -24,6 +24,7 @@ class Ie_data extends Model
         'email_secondary',
         'house_distric',
         'address',
+        'commission_percentage',
         'post',
     ];
 

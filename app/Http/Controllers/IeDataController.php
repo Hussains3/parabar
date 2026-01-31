@@ -85,6 +85,7 @@ class IeDataController extends Controller
         $ie_data->email_secondary = $request->email_secondary;
         $ie_data->house_distric = $request->house_distric;
         $ie_data->address = $request->address;
+        $ie_data->commission_percentage = $request->commission_percentage;
         $ie_data->post = $request->post;
         $ie_data->save();
 
@@ -127,7 +128,7 @@ class IeDataController extends Controller
     {
         $ie_data = Ie_data::findOrFail($id);
 
-        $ie_data = new Ie_data();
+        // $ie_data = new Ie_data();
 
 
         $ie_data->org_name = $request->org_name;
@@ -150,6 +151,7 @@ class IeDataController extends Controller
         $ie_data->email_secondary = $request->email_secondary;
         $ie_data->house_distric = $request->house_distric;
         $ie_data->address = $request->address;
+        $ie_data->commission_percentage = $request->commission_percentage;
         $ie_data->post = $request->post;
         $ie_data->save();
 

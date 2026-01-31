@@ -37,6 +37,7 @@
                                 <p><span class="font-medium">Organization Name:</span> {{$ie_data->org_name}}</p>
                                 <p><span class="font-medium">BIN Number:</span> {{$ie_data->bin_no ?: 'N/A'}}</p>
                                 <p><span class="font-medium">TIN Number:</span> {{$ie_data->tin_no ?: 'N/A'}}</p>
+                                <p><span class="font-medium">Commission Rate:</span> {{$ie_data->commission_percentage ?: 'N/A'}}</p>
                             </div>
                         </div>
 
